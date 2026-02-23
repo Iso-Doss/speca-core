@@ -11,17 +11,17 @@ use Speca\SpecaCore\Http\Controllers\Api\V1\UserPermissionController;
 use Speca\SpecaCore\Http\Controllers\Api\V1\UserProfileController;
 use Speca\SpecaCore\Http\Controllers\Api\V1\UserRoleController;
 
-//Route::name('optimize-app')->get('optimize-app', function () {
+// Route::name('optimize-app')->get('optimize-app', function () {
 //    Artisan::call('optimize:clear');
 //    Artisan::call('optimize');
 //    Log::info('App optimize.');
 //    echo "App optimize.";
-//});
+// });
 
-Route::prefix(config('paydunya-core.route.api.prefix', 'api/v1'))->name(config('paydunya-core.name', 'paydunya-core') . '.')->group(function () {
-    //Route::middleware('oauth')->group(function () {
+Route::prefix(config('paydunya-core.route.api.prefix', 'api/v1'))->name(config('paydunya-core.name', 'paydunya-core').'.')->group(function () {
+    // Route::middleware('oauth')->group(function () {
     // User permission category endpoints.
-    Route::controller(UserPermissionCategoryController::class)->prefix("/user-category-permission")->name('user-category-permission.')->group(function () {
+    Route::controller(UserPermissionCategoryController::class)->prefix('/user-category-permission')->name('user-category-permission.')->group(function () {
         Route::get('', [UserPermissionCategoryController::class, 'index'])->name('index');
         Route::post('', [UserPermissionCategoryController::class, 'create'])->name('create');
         Route::get('{userPermissionCategoryId}', [UserPermissionCategoryController::class, 'show'])->name('show');
@@ -35,7 +35,7 @@ Route::prefix(config('paydunya-core.route.api.prefix', 'api/v1'))->name(config('
     });
 
     // User permission endpoints.
-    Route::controller(UserPermissionController::class)->prefix("/user-permission")->name('user-permission.')->group(function () {
+    Route::controller(UserPermissionController::class)->prefix('/user-permission')->name('user-permission.')->group(function () {
         Route::get('', [UserPermissionController::class, 'index'])->name('index');
         Route::post('', [UserPermissionController::class, 'create'])->name('create');
         Route::get('{userPermissionId}', [UserPermissionController::class, 'show'])->name('show');
@@ -49,7 +49,7 @@ Route::prefix(config('paydunya-core.route.api.prefix', 'api/v1'))->name(config('
     });
 
     // User role endpoints.
-    Route::controller(UserRoleController::class)->prefix("/user-role")->name('user-role.')->group(function () {
+    Route::controller(UserRoleController::class)->prefix('/user-role')->name('user-role.')->group(function () {
         Route::get('', [UserRoleController::class, 'index'])->name('index');
         Route::post('', [UserRoleController::class, 'create'])->name('create');
         Route::get('{userRoleId}', [UserRoleController::class, 'show'])->name('show');
@@ -63,7 +63,7 @@ Route::prefix(config('paydunya-core.route.api.prefix', 'api/v1'))->name(config('
     });
 
     // User profile endpoints.
-    Route::controller(UserProfileController::class)->prefix("/user-profile")->name('user-profile.')->group(function () {
+    Route::controller(UserProfileController::class)->prefix('/user-profile')->name('user-profile.')->group(function () {
         Route::get('', [UserProfileController::class, 'index'])->name('index');
         Route::post('', [UserProfileController::class, 'create'])->name('create');
         Route::get('{userProfileId}', [UserProfileController::class, 'show'])->name('show');
@@ -77,7 +77,7 @@ Route::prefix(config('paydunya-core.route.api.prefix', 'api/v1'))->name(config('
     });
 
     // User endpoints.
-    Route::controller(UserController::class)->prefix("/user")->name('user.')->group(function () {
+    Route::controller(UserController::class)->prefix('/user')->name('user.')->group(function () {
         Route::get('', [UserController::class, 'index'])->name('index');
         Route::post('', [UserController::class, 'create'])->name('create');
         Route::put('/resend-confirmation-email/{email}', [UserController::class, 'resendConfirmationEmail'])->name('resend-confirmation-email');
@@ -92,27 +92,27 @@ Route::prefix(config('paydunya-core.route.api.prefix', 'api/v1'))->name(config('
     });
 
     // Activity log endpoints.
-    Route::controller(ActivityLogController::class)->prefix("/activity-log")->name('activity-log.')->group(function () {
+    Route::controller(ActivityLogController::class)->prefix('/activity-log')->name('activity-log.')->group(function () {
         Route::get('', [ActivityLogController::class, 'index'])->name('index');
         Route::post('/export', [ActivityLogController::class, 'export'])->name('export');
     });
 
     // User two-factor endpoints.
-    //Route::controller(TwoFactorController::class)->middleware('two_factor')->name('two-factor.')->prefix('/two-factor')->group(function () {
+    // Route::controller(TwoFactorController::class)->middleware('two_factor')->name('two-factor.')->prefix('/two-factor')->group(function () {
     //    Route::post('re-send-code', [TwoFactorController::class, 'reSendTwoFactorCode'])->name('re-send-code');
     //    Route::post('verify', [TwoFactorController::class, 'verifyTwoFactorCode'])->name('verify');
     //    Route::get('emergency-codes', [TwoFactorController::class, 'emergencyCodes'])->name('emergency-codes');
     //    Route::post('mark-emergency-codes-as-copied', [TwoFactorController::class, 'markEmergencyCodesAsCopied'])->name('mark-emergency-codes-as-copied');
-    //});
+    // });
 
     // Channel endpoints.
-    //Route::controller(ChannelController::class)->prefix('channel')->name('channel.')->group(function () {
+    // Route::controller(ChannelController::class)->prefix('channel')->name('channel.')->group(function () {
     //    Route::get('', [ChannelController::class, 'index'])->name('list')->withoutMiddleware('oauth');
     //    Route::post('', [ChannelController::class, 'create'])->name('create');
     //    Route::put('{channelId}', [ChannelController::class, 'update'])->name('update');
     //    Route::put('{channelId}/enable-disable/{status}', [ChannelController::class, 'enableOrDisable'])->name('enable-disable');
     //    Route::delete('{channelId}', [ChannelController::class, 'delete'])->name('delete');
-    //});
+    // });
 
     // Country endpoints.
     Route::controller(CountryController::class)->prefix('country')->name('country.')->group(function () {
@@ -127,18 +127,18 @@ Route::prefix(config('paydunya-core.route.api.prefix', 'api/v1'))->name(config('
     });
 
     // Notification endpoints.
-    //Route::controller(NotificationController::class)->prefix("/notification")->name('notification.')->group(function () {
+    // Route::controller(NotificationController::class)->prefix("/notification")->name('notification.')->group(function () {
     //    Route::get('', 'index')->name('list');
     //    Route::put('mark-as-read-or-as-unread/{notificationId}/{status}', 'markAsReadOrAsUnread')->name('mark-as-read-or-as-unread');
     //    Route::delete('{id}', 'delete')->name('delete');
     //    Route::put('mark-all-as-read-or-as-unread/{status}', 'markAllAsReadOrAsUnread')->name('mark-all-as-read-or-as-unread');
     //    Route::delete('delete-all', 'deleteAll')->name('delete-all');
-    //});
-    //});
+    // });
+    // });
 
     // Url shortener url endpoints.
     Route::prefix('url-shortener/')->name('url-shortener.')->group(function () {
-        Route::controller(UrlController::class)->prefix("/url")->name('url.')->group(function () {
+        Route::controller(UrlController::class)->prefix('/url')->name('url.')->group(function () {
             Route::get('', [UrlController::class, 'index'])->name('index');
             Route::post('', [UrlController::class, 'create'])->name('create');
             Route::post('create-many', [UrlController::class, 'createMany'])->name('create-many');
@@ -151,7 +151,7 @@ Route::prefix(config('paydunya-core.route.api.prefix', 'api/v1'))->name(config('
         });
 
         // Url shortener url history endpoints.
-        Route::controller(UrlHistoryController::class)->prefix("/url-history")->name('url-history.')->group(function () {
+        Route::controller(UrlHistoryController::class)->prefix('/url-history')->name('url-history.')->group(function () {
             Route::get('', [UrlHistoryController::class, 'index'])->name('index');
             Route::post('', [UrlHistoryController::class, 'create'])->name('create');
             Route::get('{urlHistoryId}', [UrlHistoryController::class, 'show'])->name('show');

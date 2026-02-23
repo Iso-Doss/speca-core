@@ -2,7 +2,6 @@
 
 namespace Speca\SpecaCore\Models;
 
-
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class UserProfile extends SpecaCoreBaseModel
@@ -63,5 +62,4 @@ class UserProfile extends SpecaCoreBaseModel
     {
         return $this->hasMany(User::class, 'user_profile_id');
     }
-
 }

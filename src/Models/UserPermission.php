@@ -2,19 +2,18 @@
 
 namespace Speca\SpecaCore\Models;
 
-
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Speca\SpecaCore\Traits\ModelTrait;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Models\Permission as SpatiePermission;
 use Spatie\Permission\PermissionRegistrar;
+use Speca\SpecaCore\Traits\ModelTrait;
 
 class UserPermission extends SpatiePermission
 {
-    use HasFactory, SoftDeletes, LogsActivity, HasUuids, ModelTrait;
+    use HasFactory, HasUuids, LogsActivity, ModelTrait, SoftDeletes;
 
     /**
      * The attributes that are mass-assignable.
@@ -29,7 +28,7 @@ class UserPermission extends SpatiePermission
         'activated_at',
         'created_at',
         'updated_at',
-        'deleted_at'
+        'deleted_at',
     ];
 
     /**

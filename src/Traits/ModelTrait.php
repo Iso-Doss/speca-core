@@ -3,8 +3,8 @@
 namespace Speca\SpecaCore\Traits;
 
 use Illuminate\Support\Facades\Schema;
-use Speca\SpecaCore\Enums\GroupActionType;
 use Spatie\Activitylog\LogOptions;
+use Speca\SpecaCore\Enums\GroupActionType;
 
 trait ModelTrait
 {
@@ -16,7 +16,7 @@ trait ModelTrait
     public function getStatusAttribute(): string
     {
         return match (true) {
-            !is_null($this->deleted_at) => GroupActionType::ARCHIVED->label(),
+            ! is_null($this->deleted_at) => GroupActionType::ARCHIVED->label(),
             is_null($this->activated_at) => GroupActionType::DEACTIVATED->label(),
             default => GroupActionType::ACTIVATED->label()
         };

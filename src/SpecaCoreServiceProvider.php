@@ -18,27 +18,25 @@ use Speca\SpecaCore\Http\Resources\SendApiResponse;
 use Speca\SpecaCore\Models\User;
 use Speca\SpecaCore\Providers\TelescopeServiceProvider;
 
-//use Speca\SpecaCore\Http\Resources\SendApiResponse;
-//use Speca\SpecaCore\Models\User;
-//use Speca\SpecaCore\Providers\TelescopeServiceProvider;
-//use Spatie\LaravelPackageTools\Package;
-//use Spatie\LaravelPackageTools\PackageServiceProvider;
-//use Speca\SpecaCore\Commands\SpecaCoreCommand;
+// use Speca\SpecaCore\Http\Resources\SendApiResponse;
+// use Speca\SpecaCore\Models\User;
+// use Speca\SpecaCore\Providers\TelescopeServiceProvider;
+// use Spatie\LaravelPackageTools\Package;
+// use Spatie\LaravelPackageTools\PackageServiceProvider;
+// use Speca\SpecaCore\Commands\SpecaCoreCommand;
 
-class SpecaCoreServiceProvider extends ServiceProvider /*extends PackageServiceProvider*/
+class SpecaCoreServiceProvider extends ServiceProvider /* extends PackageServiceProvider */
 {
     /**
      * Register any application services.
-     *
-     * @return void
      */
     public function register(): void
     {
         Scramble::ignoreDefaultRoutes();
 
-        //$this->app->bind('Speca\SpecaCore\Contracts\SMSProvider', function () {
+        // $this->app->bind('Speca\SpecaCore\Contracts\SMSProvider', function () {
         //    return new SmsCRMService();
-        //});
+        // });
 
         if ($this->app->environment('local')) {
             // $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
@@ -49,7 +47,6 @@ class SpecaCoreServiceProvider extends ServiceProvider /*extends PackageServiceP
     /**
      * Bootstrap any application services.
      *
-     * @return void
      * @throws BindingResolutionException
      */
     public function boot(): void
@@ -59,9 +56,8 @@ class SpecaCoreServiceProvider extends ServiceProvider /*extends PackageServiceP
         $this->configureMiddleware();
         $this->registerConfigs();
         $this->registerCommands();
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'speca-core');
-        $this->loadTranslationsFrom(__DIR__ . '/../lang', 'speca-core');
-
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'speca-core');
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'speca-core');
 
         /**
          * Customization of the route for documentation.
@@ -84,14 +80,14 @@ class SpecaCoreServiceProvider extends ServiceProvider /*extends PackageServiceP
         });
 
         $this->publishes([
-            __DIR__ . '/../lang' => $this->app->langPath('vendor/speca-core'),
+            __DIR__.'/../lang' => $this->app->langPath('vendor/speca-core'),
         ], 'speca-core-lang');
 
         JsonResource::withoutWrapping();
         SendApiResponse::withoutWrapping();
 
         Factory::guessFactoryNamesUsing(function (string $modelName) {
-            return 'Speca\SpecaCore\Database\Factories\\' . class_basename($modelName) . 'Factory';
+            return 'Speca\SpecaCore\Database\Factories\\'.class_basename($modelName).'Factory';
         });
 
         Gate::define('viewTelescope', function (User $user) {
@@ -116,86 +112,84 @@ class SpecaCoreServiceProvider extends ServiceProvider /*extends PackageServiceP
         });
 
         // RateLimiter
-        //RateLimiter::for('register', function ($request) {
+        // RateLimiter::for('register', function ($request) {
         //    return Limit::perMinutes(60, 5)->by($request->ip());
-        //});
+        // });
 
         // Passport::hashClientSecrets();
         // Passport::tokensExpireIn(now()->addDays(15));
         // Passport::refreshTokensExpireIn(now()->addDays(30));
         // Passport::personalAccessTokensExpireIn(now()->addMonths(6));
 
-        //Observers
+        // Observers
     }
 
     /**
      * Register configs files.
-     *
-     * @return void
      */
     protected function registerConfigs(): void
     {
         $this->publishes([
-            __DIR__ . '/../config/speca.php' => config_path('speca.php'),
+            __DIR__.'/../config/speca.php' => config_path('speca.php'),
         ], 'speca-config');
 
         $this->publishes([
-            __DIR__ . '/../config/speca-core.php' => config_path('speca-core.php'),
+            __DIR__.'/../config/speca-core.php' => config_path('speca-core.php'),
         ], 'speca-core-main-config');
 
         $this->publishes([
-            __DIR__ . '/../config/activitylog.php' => config_path('activitylog.php'),
+            __DIR__.'/../config/activitylog.php' => config_path('activitylog.php'),
         ], 'speca-activity-log-config');
 
         $this->publishes([
-            __DIR__ . '/../config/cors.php' => config_path('cors.php'),
+            __DIR__.'/../config/cors.php' => config_path('cors.php'),
         ], 'speca-sanctum-cors-config');
 
         $this->publishes([
-            __DIR__ . '/../config/excel.php' => config_path('excel.php'),
+            __DIR__.'/../config/excel.php' => config_path('excel.php'),
         ], 'speca-maatwebsite-excel-config');
 
         $this->publishes([
-            __DIR__ . '/../config/log-viewer.php' => config_path('log-viewer.php'),
+            __DIR__.'/../config/log-viewer.php' => config_path('log-viewer.php'),
         ], 'speca-log-viewer-config');
 
         $this->publishes([
-            __DIR__ . '/../config/passport.php' => config_path('passport.php'),
+            __DIR__.'/../config/passport.php' => config_path('passport.php'),
         ], 'speca-passport-config');
 
         $this->publishes([
-            __DIR__ . '/../config/permission.php' => config_path('permission.php'),
+            __DIR__.'/../config/permission.php' => config_path('permission.php'),
         ], 'speca-permission-config');
 
         $this->publishes([
-            __DIR__ . '/../config/pulse.php' => config_path('pulse.php'),
+            __DIR__.'/../config/pulse.php' => config_path('pulse.php'),
         ], 'speca-pulse-config');
 
         $this->publishes([
-            __DIR__ . '/../config/scramble.php' => config_path('scramble.php'),
+            __DIR__.'/../config/scramble.php' => config_path('scramble.php'),
         ], 'speca-scramble-config');
 
         $this->publishes([
-            __DIR__ . '/../config/telescope.php' => config_path('telescope.php'),
+            __DIR__.'/../config/telescope.php' => config_path('telescope.php'),
         ], 'speca-telescope-config');
 
         $this->publishes([
-            __DIR__ . '/../config/auth.php' => config_path('auth.php'),
+            __DIR__.'/../config/auth.php' => config_path('auth.php'),
         ], 'speca-auth');
 
         $this->publishes([
-            __DIR__ . '/../config/speca.php' => config_path('speca.php'),
-            __DIR__ . '/../config/speca-core.php' => config_path('speca-core.php'),
-            __DIR__ . '/../config/activitylog.php' => config_path('activitylog.php'),
-            __DIR__ . '/../config/cors.php' => config_path('cors.php'),
-            __DIR__ . '/../config/excel.php' => config_path('excel.php'),
-            __DIR__ . '/../config/log-viewer.php' => config_path('log-viewer.php'),
-            __DIR__ . '/../config/passport.php' => config_path('passport.php'),
-            __DIR__ . '/../config/permission.php' => config_path('permission.php'),
-            __DIR__ . '/../config/pulse.php' => config_path('pulse.php'),
-            __DIR__ . '/../config/scramble.php' => config_path('scramble.php'),
-            __DIR__ . '/../config/telescope.php' => config_path('telescope.php'),
-            __DIR__ . '/../config/auth.php' => config_path('auth.php'),
+            __DIR__.'/../config/speca.php' => config_path('speca.php'),
+            __DIR__.'/../config/speca-core.php' => config_path('speca-core.php'),
+            __DIR__.'/../config/activitylog.php' => config_path('activitylog.php'),
+            __DIR__.'/../config/cors.php' => config_path('cors.php'),
+            __DIR__.'/../config/excel.php' => config_path('excel.php'),
+            __DIR__.'/../config/log-viewer.php' => config_path('log-viewer.php'),
+            __DIR__.'/../config/passport.php' => config_path('passport.php'),
+            __DIR__.'/../config/permission.php' => config_path('permission.php'),
+            __DIR__.'/../config/pulse.php' => config_path('pulse.php'),
+            __DIR__.'/../config/scramble.php' => config_path('scramble.php'),
+            __DIR__.'/../config/telescope.php' => config_path('telescope.php'),
+            __DIR__.'/../config/auth.php' => config_path('auth.php'),
         ], 'speca-core-config');
     }
 
@@ -204,14 +198,14 @@ class SpecaCoreServiceProvider extends ServiceProvider /*extends PackageServiceP
      */
     protected function registerMigrations(): void
     {
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
-        //$this->publishes([
+        // $this->publishes([
         //    __DIR__ . '/../database/migrations' => database_path('migrations'),
-        //], 'speca-core-migrations');
+        // ], 'speca-core-migrations');
 
         $this->publishesMigrations([
-            __DIR__ . '/../database/migrations' => database_path('migrations'),
+            __DIR__.'/../database/migrations' => database_path('migrations'),
         ], 'speca-core-migrations');
     }
 
@@ -228,20 +222,16 @@ class SpecaCoreServiceProvider extends ServiceProvider /*extends PackageServiceP
 
     /**
      * Register the package routes.
-     *
-     * @return void
      */
     private function registerRoutes(): void
     {
         Route::group($this->routeConfiguration(), function () {
-            $this->loadRoutesFrom(__DIR__ . '/Http/routes/api.php');
+            $this->loadRoutesFrom(__DIR__.'/Http/routes/api.php');
         });
     }
 
     /**
      * Get the Telescope route group configuration array.
-     *
-     * @return array
      */
     private function routeConfiguration(): array
     {
@@ -263,18 +253,18 @@ class SpecaCoreServiceProvider extends ServiceProvider /*extends PackageServiceP
         }
     }
 
-//public function configurePackage(Package $package): void
-//{
-//    /*
-//     * This class is a Package Service Provider
-//     *
-//     * More info: https://github.com/spatie/laravel-package-tools
-//     */
-//    $package
-//        ->name('speca-core')
-//        ->hasConfigFile()
-//        ->hasViews()
-//        ->hasMigration('create_migration_table_name_table')
-//        ->hasCommand(SpecaCoreCommand::class);
-//}
+    // public function configurePackage(Package $package): void
+    // {
+    //    /*
+    //     * This class is a Package Service Provider
+    //     *
+    //     * More info: https://github.com/spatie/laravel-package-tools
+    //     */
+    //    $package
+    //        ->name('speca-core')
+    //        ->hasConfigFile()
+    //        ->hasViews()
+    //        ->hasMigration('create_migration_table_name_table')
+    //        ->hasCommand(SpecaCoreCommand::class);
+    // }
 }

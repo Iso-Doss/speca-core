@@ -3,11 +3,11 @@
 namespace Speca\SpecaCore\Http\Controllers\Api\V1;
 
 use Maatwebsite\Excel\Facades\Excel;
+use Spatie\Activitylog\Models\Activity;
 use Speca\SpecaCore\Export\ExportModel;
 use Speca\SpecaCore\Http\Controllers\Controller;
 use Speca\SpecaCore\Http\Requests\ActivityLog\FilterRequest;
 use Speca\SpecaCore\Http\Resources\SendApiResponse;
-use Spatie\Activitylog\Models\Activity;
 
 class ActivityLogController extends Controller
 {
@@ -16,13 +16,13 @@ class ActivityLogController extends Controller
      */
     public function __construct()
     {
-        //$this->middleware('permission:list-activity-log', ['only' => ['index']]);
+        // $this->middleware('permission:list-activity-log', ['only' => ['index']]);
     }
 
     /**
      * Activity Log list.
      *
-     * @param FilterRequest $request The request.
+     * @param  FilterRequest  $request  The request.
      * @return SendApiResponse The api response.
      */
     public function index(FilterRequest $request): SendApiResponse
@@ -53,7 +53,7 @@ class ActivityLogController extends Controller
     /**
      * Export the activity.
      *
-     * @param FilterRequest $request The request.
+     * @param  FilterRequest  $request  The request.
      * @return SendApiResponse The api response.
      */
     public static function export(FilterRequest $request): SendApiResponse
@@ -63,9 +63,9 @@ class ActivityLogController extends Controller
         $columnsLabel = ['Date de création', 'Détail de l\'action'];
         $userActivities = self::activityLogRequest($requestData)->get($columnsName)->toArray();
 
-        Excel::store(new ExportModel($userActivities, $columnsLabel), 'activities/activities_export' . now()->format('Y-m-d') . '.xlsx', 'public');
+        Excel::store(new ExportModel($userActivities, $columnsLabel), 'activities/activities_export'.now()->format('Y-m-d').'.xlsx', 'public');
         // Todo : Mettre en place l'exportation sur le space de Digital Ocean (S3).
-        //Excel::store(new ExportModel($userPermissionCategories, $columnsLabel), '', 'public');
+        // Excel::store(new ExportModel($userPermissionCategories, $columnsLabel), '', 'public');
 
         addActivityLog(
             model: Activity::getModel(),
@@ -86,39 +86,38 @@ class ActivityLogController extends Controller
     /**
      * Activity request.
      *
-     * @param array $requestData The request data.
+     * @param  array  $requestData  The request data.
      * @return mixed The activity request.
      */
     public static function activityLogRequest(array $requestData = []): mixed
     {
-        return Activity::with('causer')->when($requestData['activity_log_id'] ?? '', fn($q) => $q->where('id', $requestData['activity_log_id']))
-            ->when($requestData['description'] ?? '', fn($q) => $q->where('description', 'like', '%' . $requestData['description'] . '%'))
-            ->when($requestData['event'] ?? '', fn($q) => $q->where('event', 'like', '%' . $requestData['event'] . '%'))
-            ->when($requestData['period_start'] ?? '', fn($q) => $q->where('created_at', '>=', $requestData['period_start']))
-            ->when($requestData['period_end'] ?? '', fn($q) => $q->where('created_at', '<=', $requestData['period_end']))
+        return Activity::with('causer')->when($requestData['activity_log_id'] ?? '', fn ($q) => $q->where('id', $requestData['activity_log_id']))
+            ->when($requestData['description'] ?? '', fn ($q) => $q->where('description', 'like', '%'.$requestData['description'].'%'))
+            ->when($requestData['event'] ?? '', fn ($q) => $q->where('event', 'like', '%'.$requestData['event'].'%'))
+            ->when($requestData['period_start'] ?? '', fn ($q) => $q->where('created_at', '>=', $requestData['period_start']))
+            ->when($requestData['period_end'] ?? '', fn ($q) => $q->where('created_at', '<=', $requestData['period_end']))
             ->when($requestData['full_name'] ?? '', function ($q) use ($requestData) {
                 $q->whereHas('causer', function ($subQuery) use ($requestData) {
-                    $subQuery->where('full_name', 'like', '%' . $requestData['full_name'] . '%');
+                    $subQuery->where('full_name', 'like', '%'.$requestData['full_name'].'%');
                 });
             })
             ->when($requestData['email'] ?? '', function ($q) use ($requestData) {
                 $q->whereHas('causer', function ($subQuery) use ($requestData) {
-                    $subQuery->where('email', 'like', '%' . $requestData['email'] . '%');
+                    $subQuery->where('email', 'like', '%'.$requestData['email'].'%');
                 });
             })
             ->when($requestData['search'] ?? '', function ($q) use ($requestData) {
                 $q->where(function ($subQuery) use ($requestData) {
-                    $subQuery->where('description', 'like', '%' . $requestData['search'] . '%')
+                    $subQuery->where('description', 'like', '%'.$requestData['search'].'%')
                         ->orWhereHas('causer', function ($userQuery) use ($requestData) {
-                            $userQuery->where('full_name', 'like', '%' . $requestData['search'] . '%')
-                                ->orWhere('email', 'like', '%' . $requestData['search'] . '%');
+                            $userQuery->where('full_name', 'like', '%'.$requestData['search'].'%')
+                                ->orWhere('email', 'like', '%'.$requestData['search'].'%');
                         });
                 });
             })
-            ->when($requestData['check'] ?? '', fn($q) => $q->whereIn('id', $requestData['check']))
-            ->when($requestData['uncheck'] ?? '', fn($q) => $q->whereNotIn('id', $requestData['uncheck']))
+            ->when($requestData['check'] ?? '', fn ($q) => $q->whereIn('id', $requestData['check']))
+            ->when($requestData['uncheck'] ?? '', fn ($q) => $q->whereNotIn('id', $requestData['uncheck']))
             ->where('log_name', '=', 'paydunya-core')
             ->latest();
     }
 }
-

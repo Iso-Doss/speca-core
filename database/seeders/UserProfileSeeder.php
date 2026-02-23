@@ -27,7 +27,7 @@ class UserProfileSeeder extends Seeder
         foreach ($profiles as $profile) {
             UserProfile::withTrashed()->updateOrCreate(['name' => $profile], [
                 'name' => $profile,
-                'description' => 'Profil ' . $profile,
+                'description' => 'Profil '.$profile,
             ]);
         }
     }

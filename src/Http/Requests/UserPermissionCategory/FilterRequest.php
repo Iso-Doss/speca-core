@@ -15,7 +15,7 @@ class FilterRequest extends BaseFilterRequest
     public function rules(): array
     {
         return array_merge(parent::rules(), [
-            'user_permission_category_id' => ['nullable', 'string', 'max:255', 'exists:' . config('permission.table_names.permission_categories') . ',id'],
+            'user_permission_category_id' => ['nullable', 'string', 'max:255', 'exists:'.config('permission.table_names.permission_categories').',id'],
             'label' => ['nullable', 'string', 'max:255'],
             'name' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:255'],
@@ -25,8 +25,6 @@ class FilterRequest extends BaseFilterRequest
 
     /**
      * Prepare the data for validation.
-     *
-     * @return void
      */
     protected function prepareForValidation(): void
     {

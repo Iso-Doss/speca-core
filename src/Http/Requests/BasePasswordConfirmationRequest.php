@@ -14,14 +14,12 @@ class BasePasswordConfirmationRequest extends BaseRequest
     public function rules(): array
     {
         return array_merge(parent::rules(), [
-            'password' => ['required', 'string', 'max:255']
+            'password' => ['required', 'string', 'max:255'],
         ]);
     }
 
     /**
      * Prepare the data for validation.
-     *
-     * @return void
      */
     protected function prepareForValidation(): void
     {

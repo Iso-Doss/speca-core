@@ -4,10 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
-        if (!Schema::hasTable('user_password_histories')) {
+        if (! Schema::hasTable('user_password_histories')) {
             Schema::create('user_password_histories', function (Blueprint $table) {
                 $table->uuid('id')->primary()->unique();
                 $table->foreignUuid('user_id')->references('id')->on('users')->cascadeOnUpdate()->cascadeOnDelete();

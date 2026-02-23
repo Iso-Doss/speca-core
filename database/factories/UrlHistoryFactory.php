@@ -9,7 +9,7 @@ class UrlHistoryFactory
     /**
      * The model.
      *
-     * @var string $model The model.
+     * @var string The model.
      */
     protected string $model = UrlHistory::class;
 

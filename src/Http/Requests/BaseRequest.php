@@ -32,8 +32,6 @@ class BaseRequest extends FormRequest
     /**
      * Handle a failed validation attempt.
      *
-     * @param Validator $validator
-     * @return void
      *
      * @throws ValidationException
      */
@@ -55,8 +53,6 @@ class BaseRequest extends FormRequest
 
     /**
      * Prepare for validation.
-     *
-     * @return void
      */
     protected function prepareForValidation(): void
     {

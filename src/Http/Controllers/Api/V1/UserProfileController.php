@@ -2,7 +2,6 @@
 
 namespace Speca\SpecaCore\Http\Controllers\Api\V1;
 
-
 use Maatwebsite\Excel\Facades\Excel;
 use Speca\SpecaCore\Enums\GroupActionType;
 use Speca\SpecaCore\Export\ExportModel;
@@ -22,22 +21,22 @@ class UserProfileController extends Controller
      */
     public function __construct()
     {
-        //$this->middleware('permission:list-user-profile|show-user-profile|create-user-profile|update-user-profile|enable-disable-user-profile|delete-user-profile|restore-user-profile|force-delete-user-profile', ['only' => ['index']]);
-        //$this->middleware('permission:show-user-profile', ['only' => ['show']]);
-        //$this->middleware('permission:create-user-profile', ['only' => ['create']]);
-        //$this->middleware('permission:update-user-profile', ['only' => ['update']]);
-        //$this->middleware('permission:enable-disable-user-profile', ['only' => ['enableOrDisable']]);
-        //$this->middleware('permission:group-action-user-profile', ['only' => ['groupAction']]);
-        //$this->middleware('permission:export-user-profile', ['only' => ['export']]);
-        //$this->middleware('permission:delete-user-profile', ['only' => ['delete']]);
-        //$this->middleware('permission:restore-user-profile', ['only' => ['restore']]);
-        //$this->middleware('permission:force-delete-user-profile', ['only' => ['forceDelete']]);
+        // $this->middleware('permission:list-user-profile|show-user-profile|create-user-profile|update-user-profile|enable-disable-user-profile|delete-user-profile|restore-user-profile|force-delete-user-profile', ['only' => ['index']]);
+        // $this->middleware('permission:show-user-profile', ['only' => ['show']]);
+        // $this->middleware('permission:create-user-profile', ['only' => ['create']]);
+        // $this->middleware('permission:update-user-profile', ['only' => ['update']]);
+        // $this->middleware('permission:enable-disable-user-profile', ['only' => ['enableOrDisable']]);
+        // $this->middleware('permission:group-action-user-profile', ['only' => ['groupAction']]);
+        // $this->middleware('permission:export-user-profile', ['only' => ['export']]);
+        // $this->middleware('permission:delete-user-profile', ['only' => ['delete']]);
+        // $this->middleware('permission:restore-user-profile', ['only' => ['restore']]);
+        // $this->middleware('permission:force-delete-user-profile', ['only' => ['forceDelete']]);
     }
 
     /**
      * User profile list.
      *
-     * @param FilterRequest $request The request.
+     * @param  FilterRequest  $request  The request.
      * @return SendApiResponse The api response.
      */
     public function index(FilterRequest $request): SendApiResponse
@@ -73,7 +72,7 @@ class UserProfileController extends Controller
     /**
      * User profile details.
      *
-     * @param string $userProfileId The user id.
+     * @param  string  $userProfileId  The user id.
      * @return SendApiResponse The api response.
      */
     public function show(string $userProfileId): SendApiResponse
@@ -106,7 +105,7 @@ class UserProfileController extends Controller
     /**
      * Create the user profile.
      *
-     * @param FormRequest $request The request.
+     * @param  FormRequest  $request  The request.
      * @return SendApiResponse The api response.
      */
     public function create(FormRequest $request): SendApiResponse
@@ -132,12 +131,11 @@ class UserProfileController extends Controller
         );
     }
 
-
     /**
      * Update the user profile.
      *
-     * @param FormRequest $request The request.
-     * @param string $userProfileId The user profile id.
+     * @param  FormRequest  $request  The request.
+     * @param  string  $userProfileId  The user profile id.
      * @return SendApiResponse The api response.
      */
     public function update(FormRequest $request, string $userProfileId): SendApiResponse
@@ -172,22 +170,22 @@ class UserProfileController extends Controller
     /**
      * Enable or disable the user profile.
      *
-     * @param EnableDisableRequest $request The request.
-     * @param string $userProfileId The user profile id.
+     * @param  EnableDisableRequest  $request  The request.
+     * @param  string  $userProfileId  The user profile id.
      * @return SendApiResponse The api response.
      */
     public function enableOrDisable(EnableDisableRequest $request, string $userProfileId): SendApiResponse
     {
         $requestData = $request->validated();
 
-        $userProfile = modelExist(UserProfile::getModel(), $userProfileId, 'user-profile', ('enabled' == $requestData['new_status']) ? 'activated' : 'deactivated', $requestData);
+        $userProfile = modelExist(UserProfile::getModel(), $userProfileId, 'user-profile', ($requestData['new_status'] == 'enabled') ? 'activated' : 'deactivated', $requestData);
         if ($userProfile instanceof SendApiResponse) {
             return $userProfile;
         }
 
         $oldStatus = (is_null($userProfile->activated_at)) ? 'disabled' : 'enabled';
-        $activatedAt = ('enabled' == $requestData['new_status']) ? now() : null;
-        $toDo = ('enabled' == $requestData['new_status']) ? __('paydunya-core::messages.user-profile.activated') : __('paydunya-core::messages.user-profile.deactivated');
+        $activatedAt = ($requestData['new_status'] == 'enabled') ? now() : null;
+        $toDo = ($requestData['new_status'] == 'enabled') ? __('paydunya-core::messages.user-profile.activated') : __('paydunya-core::messages.user-profile.deactivated');
 
         if ($requestData['new_status'] !== $oldStatus) {
             $userProfile->update(['activated_at' => $activatedAt]);
@@ -197,9 +195,9 @@ class UserProfileController extends Controller
 
         addActivityLog(
             model: UserProfile::getModel(),
-            event: 'user-' . ($activatedAt ? 'activated' : 'deactivated'),
+            event: 'user-'.($activatedAt ? 'activated' : 'deactivated'),
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-profile.' . ($activatedAt ? 'activated' : 'deactivated'), ['name' => $userProfile->name])
+            logDescription: __('paydunya-core::activity-log.user-profile.'.($activatedAt ? 'activated' : 'deactivated'), ['name' => $userProfile->name])
         );
 
         return new SendApiResponse(
@@ -214,7 +212,7 @@ class UserProfileController extends Controller
     /**
      * Apply a group action on the user profile.
      *
-     * @param GroupActionRequest $request The request.
+     * @param  GroupActionRequest  $request  The request.
      * @return SendApiResponse The api response.
      */
     public static function groupAction(GroupActionRequest $request): SendApiResponse
@@ -235,7 +233,7 @@ class UserProfileController extends Controller
 
             addActivityLog(
                 model: UserProfile::getModel(),
-                event: 'user-group-action-' . strtolower($requestData['action']),
+                event: 'user-group-action-'.strtolower($requestData['action']),
                 properties: ['input' => $requestData, 'output' => $userProfiles->get()->toArray()],
                 logDescription: __('paydunya-core::activity-log.user-profile.group-action', ['action' => GroupActionType::from($requestData['action'])->label()])
             );
@@ -250,7 +248,7 @@ class UserProfileController extends Controller
         } else {
             addActivityLog(
                 model: UserProfile::getModel(),
-                event: 'user-group-action-' . strtolower($requestData['action']) . '-attempt',
+                event: 'user-group-action-'.strtolower($requestData['action']).'-attempt',
                 properties: ['input' => $requestData, 'output' => $userProfiles->get()->toArray()],
                 logDescription: __('paydunya-core::activity-log.user-profile.group-action-attempt', ['action' => GroupActionType::from($requestData['action'])->label()])
             );
@@ -268,7 +266,7 @@ class UserProfileController extends Controller
     /**
      * Export the user profile.
      *
-     * @param FilterRequest $request The request.
+     * @param  FilterRequest  $request  The request.
      * @return SendApiResponse The api response.
      */
     public static function export(FilterRequest $request): SendApiResponse
@@ -278,7 +276,7 @@ class UserProfileController extends Controller
         $columnsLabel = ['Nom complet', 'Description', 'Date de création'];
         $users = self::userProfileRequest($requestData)->get($columnsName)->toArray();
 
-        Excel::store(new ExportModel($users, $columnsLabel), 'user-profiles/users-profiles_export' . now()->format('Y-m-d') . '.xlsx', 'public');
+        Excel::store(new ExportModel($users, $columnsLabel), 'user-profiles/users-profiles_export'.now()->format('Y-m-d').'.xlsx', 'public');
         // Todo : Mettre en place l'exportation sur le space de Digital Ocean (S3).
         // Excel::store(new ExportModel($users, $columnsLabel), 'user-profiles/users-profiles_export' . now()->format('Y-m-d') . '.xlsx', 'public');
 
@@ -301,8 +299,8 @@ class UserProfileController extends Controller
     /**
      * Delete the user profile.
      *
-     * @param BasePasswordConfirmationRequest $request The request.
-     * @param string $userProfileId The user profile id.
+     * @param  BasePasswordConfirmationRequest  $request  The request.
+     * @param  string  $userProfileId  The user profile id.
      * @return SendApiResponse The api response.
      */
     public function delete(BasePasswordConfirmationRequest $request, string $userProfileId): SendApiResponse
@@ -343,7 +341,7 @@ class UserProfileController extends Controller
     /**
      * Restore the user profile.
      *
-     * @param string $userProfileId The user profile id.
+     * @param  string  $userProfileId  The user profile id.
      * @return SendApiResponse The api response.
      */
     public function restore(string $userProfileId): SendApiResponse
@@ -378,8 +376,8 @@ class UserProfileController extends Controller
     /**
      * Force delete the user profile.
      *
-     * @param BasePasswordConfirmationRequest $request The request.
-     * @param string $userProfileId The user id.
+     * @param  BasePasswordConfirmationRequest  $request  The request.
+     * @param  string  $userProfileId  The user id.
      * @return SendApiResponse The api response.
      */
     public function forceDelete(BasePasswordConfirmationRequest $request, string $userProfileId): SendApiResponse
@@ -420,16 +418,16 @@ class UserProfileController extends Controller
     /**
      * User profile request.
      *
-     * @param array $requestData The request data.
+     * @param  array  $requestData  The request data.
      * @return mixed The user profile request.
      */
     public static function userProfileRequest(array $requestData = []): mixed
     {
-        return UserProfile::when($requestData['user_profile_id'] ?? '', fn($q) => $q->where('id', $requestData['user_profile_id']))
-            ->when($requestData['name'] ?? '', fn($q) => $q->where('name', 'like', '%' . $requestData['name'] . '%'))
-            ->when($requestData['description'] ?? '', fn($q) => $q->where('description', 'like', '%' . $requestData['email'] . '%'))
-            ->when($requestData['check'] ?? '', fn($q) => $q->whereIn('id', $requestData['check']))
-            ->when($requestData['uncheck'] ?? '', fn($q) => $q->whereNotIn('id', $requestData['uncheck']))
+        return UserProfile::when($requestData['user_profile_id'] ?? '', fn ($q) => $q->where('id', $requestData['user_profile_id']))
+            ->when($requestData['name'] ?? '', fn ($q) => $q->where('name', 'like', '%'.$requestData['name'].'%'))
+            ->when($requestData['description'] ?? '', fn ($q) => $q->where('description', 'like', '%'.$requestData['email'].'%'))
+            ->when($requestData['check'] ?? '', fn ($q) => $q->whereIn('id', $requestData['check']))
+            ->when($requestData['uncheck'] ?? '', fn ($q) => $q->whereNotIn('id', $requestData['uncheck']))
             ->latest();
     }
 }

@@ -16,14 +16,12 @@ class EnableDisableRequest extends BaseRequest
     {
         return array_merge(parent::rules(), [
             'user_profile_id' => ['required', 'string', 'max:255', 'exists:user_profiles,id'],
-            'new_status' => ['required', 'string', 'max:255', 'in:enabled,disabled']
+            'new_status' => ['required', 'string', 'max:255', 'in:enabled,disabled'],
         ]);
     }
 
     /**
      * Prepare the data for validation.
-     *
-     * @return void
      */
     protected function prepareForValidation(): void
     {

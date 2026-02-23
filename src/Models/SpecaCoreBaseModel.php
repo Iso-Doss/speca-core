@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Speca\SpecaCore\Traits\ModelTrait;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Speca\SpecaCore\Traits\ModelTrait;
 
 class SpecaCoreBaseModel extends Model
 {
-    use HasFactory, SoftDeletes, LogsActivity, HasUuids, ModelTrait;
+    use HasFactory, HasUuids, LogsActivity, ModelTrait, SoftDeletes;
 
     /**
      * The attributes that are mass-assignable.
@@ -22,7 +22,7 @@ class SpecaCoreBaseModel extends Model
         'activated_at',
         'created_at',
         'updated_at',
-        'deleted_at'
+        'deleted_at',
     ];
 
     /**

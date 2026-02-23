@@ -4,17 +4,18 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Laravel\Pulse\Support\PulseMigration;
 
-return new class extends PulseMigration {
+return new class extends PulseMigration
+{
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        if (!$this->shouldRun()) {
+        if (! $this->shouldRun()) {
             return;
         }
 
-        if (!Schema::hasTable('pulse_values')) {
+        if (! Schema::hasTable('pulse_values')) {
             Schema::create('pulse_values', function (Blueprint $table) {
                 $table->id();
                 $table->unsignedInteger('timestamp');
@@ -32,7 +33,7 @@ return new class extends PulseMigration {
                 $table->unique(['type', 'key_hash']); // For data integrity and upserts...
             });
         }
-        if (!Schema::hasTable('pulse_entries')) {
+        if (! Schema::hasTable('pulse_entries')) {
             Schema::create('pulse_entries', function (Blueprint $table) {
                 $table->id();
                 $table->unsignedInteger('timestamp');
@@ -51,7 +52,7 @@ return new class extends PulseMigration {
                 $table->index(['timestamp', 'type', 'key_hash', 'value']); // For aggregate queries...
             });
         }
-        if (!Schema::hasTable('pulse_aggregates')) {
+        if (! Schema::hasTable('pulse_aggregates')) {
             Schema::create('pulse_aggregates', function (Blueprint $table) {
                 $table->id();
                 $table->unsignedInteger('bucket');

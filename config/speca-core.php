@@ -7,11 +7,11 @@ return [
     'route' => [
         'api' => [
             'prefix' => 'api/v1',
-            'domain' => ''
+            'domain' => '',
         ],
         'web' => [
             'prefix' => '',
-            'domain' => ''
+            'domain' => '',
         ],
     ],
 

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Speca\SpecaCore\Http\Requests\UserRole;
 
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -17,20 +16,18 @@ class FormRequest extends BaseRequest
     public function rules(): array
     {
         return array_merge(parent::rules(), [
-            'user_role_id' => ['nullable', 'string', 'max:255', 'exists:' . config('permission.table_names.roles') . ',id'],
-            'label' => ['required', 'string', 'max:255', 'unique:' . config('permission.table_names.roles') . ',label'],
-            'name' => ['nullable', 'string', 'max:255', 'unique:' . config('permission.table_names.roles') . ',name'],
+            'user_role_id' => ['nullable', 'string', 'max:255', 'exists:'.config('permission.table_names.roles').',id'],
+            'label' => ['required', 'string', 'max:255', 'unique:'.config('permission.table_names.roles').',label'],
+            'name' => ['nullable', 'string', 'max:255', 'unique:'.config('permission.table_names.roles').',name'],
             'description' => ['nullable', 'string', 'max:255'],
             'guard_name' => ['nullable', 'string', 'max:255', 'in:web,api'],
             'user_permissions' => ['nullable', 'array'],
-            'user_permissions.*' => ['required', 'string', 'max:255', 'exists:' . config('permission.table_names.permissions') . ',id'],
+            'user_permissions.*' => ['required', 'string', 'max:255', 'exists:'.config('permission.table_names.permissions').',id'],
         ]);
     }
 
     /**
      * Prepare the data for validation.
-     *
-     * @return void
      */
     protected function prepareForValidation(): void
     {

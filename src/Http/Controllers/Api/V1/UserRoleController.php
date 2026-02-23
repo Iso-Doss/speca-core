@@ -2,19 +2,17 @@
 
 namespace Speca\SpecaCore\Http\Controllers\Api\V1;
 
-
 use Maatwebsite\Excel\Facades\Excel;
 use Speca\SpecaCore\Enums\GroupActionType;
 use Speca\SpecaCore\Export\ExportModel;
 use Speca\SpecaCore\Http\Controllers\Controller;
+use Speca\SpecaCore\Http\Requests\BasePasswordConfirmationRequest;
 use Speca\SpecaCore\Http\Requests\UserRole\EnableDisableRequest;
 use Speca\SpecaCore\Http\Requests\UserRole\FilterRequest;
 use Speca\SpecaCore\Http\Requests\UserRole\FormRequest;
 use Speca\SpecaCore\Http\Requests\UserRole\GroupActionRequest;
-use Speca\SpecaCore\Http\Requests\BasePasswordConfirmationRequest;
 use Speca\SpecaCore\Http\Resources\SendApiResponse;
 use Speca\SpecaCore\Models\UserRole;
-
 
 class UserRoleController extends Controller
 {
@@ -23,22 +21,22 @@ class UserRoleController extends Controller
      */
     public function __construct()
     {
-        //$this->middleware('permission:list-user-role|show-user-role|create-user-role|update-user-role|enable-disable-user-role|delete-user-role|restore-user-role|force-delete-user-role', ['only' => ['index']]);
-        //$this->middleware('permission:show-user-role', ['only' => ['show']]);
-        //$this->middleware('permission:create-user-role', ['only' => ['create']]);
-        //$this->middleware('permission:update-user-role', ['only' => ['update']]);
-        //$this->middleware('permission:enable-disable-user-role', ['only' => ['enableOrDisable']]);
-        //$this->middleware('permission:group-action-user-role', ['only' => ['groupAction']]);
-        //$this->middleware('permission:export-user-role', ['only' => ['export']]);
-        //$this->middleware('permission:delete-user-role', ['only' => ['delete']]);
-        //$this->middleware('permission:restore-user-role', ['only' => ['restore']]);
-        //$this->middleware('permission:force-delete-user-role', ['only' => ['forceDelete']]);
+        // $this->middleware('permission:list-user-role|show-user-role|create-user-role|update-user-role|enable-disable-user-role|delete-user-role|restore-user-role|force-delete-user-role', ['only' => ['index']]);
+        // $this->middleware('permission:show-user-role', ['only' => ['show']]);
+        // $this->middleware('permission:create-user-role', ['only' => ['create']]);
+        // $this->middleware('permission:update-user-role', ['only' => ['update']]);
+        // $this->middleware('permission:enable-disable-user-role', ['only' => ['enableOrDisable']]);
+        // $this->middleware('permission:group-action-user-role', ['only' => ['groupAction']]);
+        // $this->middleware('permission:export-user-role', ['only' => ['export']]);
+        // $this->middleware('permission:delete-user-role', ['only' => ['delete']]);
+        // $this->middleware('permission:restore-user-role', ['only' => ['restore']]);
+        // $this->middleware('permission:force-delete-user-role', ['only' => ['forceDelete']]);
     }
 
     /**
      * User role list.
      *
-     * @param FilterRequest $request The request.
+     * @param  FilterRequest  $request  The request.
      * @return SendApiResponse The api response.
      */
     public function index(FilterRequest $request): SendApiResponse
@@ -74,7 +72,7 @@ class UserRoleController extends Controller
     /**
      * User role details.
      *
-     * @param string $userRoleId The user role id.
+     * @param  string  $userRoleId  The user role id.
      * @return SendApiResponse The api response.
      */
     public function show(string $userRoleId): SendApiResponse
@@ -107,7 +105,7 @@ class UserRoleController extends Controller
     /**
      * Create the user role.
      *
-     * @param FormRequest $request The request.
+     * @param  FormRequest  $request  The request.
      * @return SendApiResponse The api response.
      */
     public function create(FormRequest $request): SendApiResponse
@@ -115,7 +113,7 @@ class UserRoleController extends Controller
         $requestData = $request->validated();
         $userRole = UserRole::create($requestData)?->refresh();
 
-        if (!empty($requestData['user_permissions'])) {
+        if (! empty($requestData['user_permissions'])) {
             $userRole->syncPermissions($requestData['user_permissions']);
         }
 
@@ -140,8 +138,8 @@ class UserRoleController extends Controller
     /**
      * Update the user role.
      *
-     * @param FormRequest $request The request.
-     * @param string $userRoleId The user role id.
+     * @param  FormRequest  $request  The request.
+     * @param  string  $userRoleId  The user role id.
      * @return SendApiResponse The api response.
      */
     public function update(FormRequest $request, string $userRoleId): SendApiResponse
@@ -155,7 +153,7 @@ class UserRoleController extends Controller
 
         $userRole->update($requestData);
 
-        if (!empty($requestData['user_permissions'])) {
+        if (! empty($requestData['user_permissions'])) {
             $userRole->syncPermissions($requestData['user_permissions']);
         }
 
@@ -167,7 +165,6 @@ class UserRoleController extends Controller
             properties: ['input' => $requestData, 'output' => $output],
             logDescription: __('paydunya-core::activity-log.user-role.updated', ['user_role' => $userRole->label])
         );
-
 
         return new SendApiResponse(
             success: true,
@@ -181,22 +178,22 @@ class UserRoleController extends Controller
     /**
      * Enable or disable the user role.
      *
-     * @param EnableDisableRequest $request The request.
-     * @param string $userRoleId The user role id.
+     * @param  EnableDisableRequest  $request  The request.
+     * @param  string  $userRoleId  The user role id.
      * @return SendApiResponse The api response.
      */
     public function enableOrDisable(EnableDisableRequest $request, string $userRoleId): SendApiResponse
     {
         $requestData = $request->validated();
 
-        $userRole = modelExist(UserRole::getModel(), $userRoleId, 'user-role',('enabled' == $requestData['new_status']) ? 'activated' : 'deactivated', $requestData);
+        $userRole = modelExist(UserRole::getModel(), $userRoleId, 'user-role', ($requestData['new_status'] == 'enabled') ? 'activated' : 'deactivated', $requestData);
         if ($userRole instanceof SendApiResponse) {
             return $userRole;
         }
 
         $oldStatus = (is_null($userRole->activated_at)) ? 'disabled' : 'enabled';
-        $activatedAt = ('enabled' == $requestData['new_status']) ? now() : null;
-        $toDo = ('enabled' == $requestData['new_status']) ? __('paydunya-core::messages.user-role.activated') : __('paydunya-core::messages.user-role.deactivated');
+        $activatedAt = ($requestData['new_status'] == 'enabled') ? now() : null;
+        $toDo = ($requestData['new_status'] == 'enabled') ? __('paydunya-core::messages.user-role.activated') : __('paydunya-core::messages.user-role.deactivated');
 
         if ($requestData['new_status'] !== $oldStatus) {
             $userRole->update(['activated_at' => $activatedAt]);
@@ -206,9 +203,9 @@ class UserRoleController extends Controller
 
         addActivityLog(
             model: UserRole::getModel(),
-            event: 'user-role-' . ($activatedAt ? 'activated' : 'deactivated'),
+            event: 'user-role-'.($activatedAt ? 'activated' : 'deactivated'),
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-role.' . ($activatedAt ? 'activated' : 'deactivated'), ['user_role' => $userRole->label])
+            logDescription: __('paydunya-core::activity-log.user-role.'.($activatedAt ? 'activated' : 'deactivated'), ['user_role' => $userRole->label])
         );
 
         return new SendApiResponse(
@@ -223,7 +220,7 @@ class UserRoleController extends Controller
     /**
      * Apply a group action on the role.
      *
-     * @param GroupActionRequest $request The request.
+     * @param  GroupActionRequest  $request  The request.
      * @return SendApiResponse The api response.
      */
     public static function groupAction(GroupActionRequest $request): SendApiResponse
@@ -244,7 +241,7 @@ class UserRoleController extends Controller
 
             addActivityLog(
                 model: UserRole::getModel(),
-                event: 'user-group-action-' . strtolower($requestData['action']),
+                event: 'user-group-action-'.strtolower($requestData['action']),
                 properties: ['input' => $requestData, 'output' => $userRoles->get()->toArray()],
                 logDescription: __('paydunya-core::activity-log.user-role.group-action', ['action' => GroupActionType::from($requestData['action'])->label()])
             );
@@ -259,7 +256,7 @@ class UserRoleController extends Controller
         } else {
             addActivityLog(
                 model: UserRole::getModel(),
-                event: 'user-group-action-' . strtolower($requestData['action']) . '-attempt',
+                event: 'user-group-action-'.strtolower($requestData['action']).'-attempt',
                 properties: ['input' => $requestData, 'output' => $userRoles->get()->toArray()],
                 logDescription: __('paydunya-core::activity-log.user-role.group-action-attempt', ['action' => GroupActionType::from($requestData['action'])->label()])
             );
@@ -277,7 +274,7 @@ class UserRoleController extends Controller
     /**
      * Export the user roles.
      *
-     * @param FilterRequest $request The request.
+     * @param  FilterRequest  $request  The request.
      * @return SendApiResponse The api response.
      */
     public static function export(FilterRequest $request): SendApiResponse
@@ -287,7 +284,7 @@ class UserRoleController extends Controller
         $columnsLabel = ['Nom', 'Date de création', 'Statut', 'Nombre de collaborateurs'];
         $userRoles = self::userRoleRequest($requestData)->get($columnsName)->toArray();
 
-        Excel::store(new ExportModel($userRoles, $columnsLabel), 'roles/roles_export' . now()->format('Y-m-d') . '.xlsx', 'public');
+        Excel::store(new ExportModel($userRoles, $columnsLabel), 'roles/roles_export'.now()->format('Y-m-d').'.xlsx', 'public');
         // Todo : Mettre en place l'exportation sur le space de Digital Ocean (S3).
         // Excel::store(new ExportModel($userRoles, $columnsLabel), 'roles/roles_export' . now()->format('Y-m-d') . '.xlsx', 'public');
 
@@ -310,8 +307,8 @@ class UserRoleController extends Controller
     /**
      * Delete the user role.
      *
-     * @param BasePasswordConfirmationRequest $request The request.
-     * @param string $userRoleId The user role id.
+     * @param  BasePasswordConfirmationRequest  $request  The request.
+     * @param  string  $userRoleId  The user role id.
      * @return SendApiResponse The api response.
      */
     public function delete(BasePasswordConfirmationRequest $request, string $userRoleId): SendApiResponse
@@ -352,7 +349,7 @@ class UserRoleController extends Controller
     /**
      * Restore the user role.
      *
-     * @param string $userRoleId The user role id.
+     * @param  string  $userRoleId  The user role id.
      * @return SendApiResponse The api response.
      */
     public function restore(string $userRoleId): SendApiResponse
@@ -387,8 +384,8 @@ class UserRoleController extends Controller
     /**
      * Force delete the user role.
      *
-     * @param BasePasswordConfirmationRequest $request The request.
-     * @param string $userRoleId The user role id.
+     * @param  BasePasswordConfirmationRequest  $request  The request.
+     * @param  string  $userRoleId  The user role id.
      * @return SendApiResponse The api response.
      */
     public function forceDelete(BasePasswordConfirmationRequest $request, string $userRoleId): SendApiResponse
@@ -429,27 +426,27 @@ class UserRoleController extends Controller
     /**
      * User role request.
      *
-     * @param array $requestData The request data.
+     * @param  array  $requestData  The request data.
      * @return mixed The user role request.
      */
     public static function userRoleRequest(array $requestData = []): mixed
     {
-        return UserRole::when($requestData['user_role_id'] ?? '', fn($q) => $q->where('id', $requestData['user_role_id']))
-            ->when($requestData['label'] ?? '', fn($q) => $q->where('label', 'like', '%' . $requestData['label'] . '%'))
-            ->when($requestData['name'] ?? '', fn($q) => $q->where('name', 'like', '%' . $requestData['name'] . '%'))
-            ->when($requestData['description'] ?? '', fn($q) => $q->where('description', 'like', '%' . $requestData['description'] . '%'))
-            ->when($requestData['guard_name'] ?? '', fn($q) => $q->where('guard_name', $requestData['guard_name']))
-            ->when(array_key_exists('activated', $requestData), fn($q) => $requestData['activated'] ? $q->whereNotNull('activated_at') : $q->whereNull('activated_at'))
-            ->when(array_key_exists('archived', $requestData), fn($q) => $requestData['archived'] ? $q->onlyTrashed() : $q->withTrashed())
+        return UserRole::when($requestData['user_role_id'] ?? '', fn ($q) => $q->where('id', $requestData['user_role_id']))
+            ->when($requestData['label'] ?? '', fn ($q) => $q->where('label', 'like', '%'.$requestData['label'].'%'))
+            ->when($requestData['name'] ?? '', fn ($q) => $q->where('name', 'like', '%'.$requestData['name'].'%'))
+            ->when($requestData['description'] ?? '', fn ($q) => $q->where('description', 'like', '%'.$requestData['description'].'%'))
+            ->when($requestData['guard_name'] ?? '', fn ($q) => $q->where('guard_name', $requestData['guard_name']))
+            ->when(array_key_exists('activated', $requestData), fn ($q) => $requestData['activated'] ? $q->whereNotNull('activated_at') : $q->whereNull('activated_at'))
+            ->when(array_key_exists('archived', $requestData), fn ($q) => $requestData['archived'] ? $q->onlyTrashed() : $q->withTrashed())
             ->when($requestData['search'] ?? '', function ($q) use ($requestData) {
                 $q->where(function ($subQuery) use ($requestData) {
-                    $subQuery->where('label', 'like', '%' . $requestData['search'] . '%')
-                        ->orWhere('name', 'like', '%' . $requestData['search'] . '%')
-                        ->orWhere('description', 'like', '%' . $requestData['search'] . '%');
+                    $subQuery->where('label', 'like', '%'.$requestData['search'].'%')
+                        ->orWhere('name', 'like', '%'.$requestData['search'].'%')
+                        ->orWhere('description', 'like', '%'.$requestData['search'].'%');
                 });
             })
-            ->when($requestData['check'] ?? '', fn($q) => $q->whereIn('id', $requestData['check']))
-            ->when($requestData['uncheck'] ?? '', fn($q) => $q->whereNotIn('id', $requestData['uncheck']))
+            ->when($requestData['check'] ?? '', fn ($q) => $q->whereIn('id', $requestData['check']))
+            ->when($requestData['uncheck'] ?? '', fn ($q) => $q->whereNotIn('id', $requestData['uncheck']))
             ->latest();
     }
 }

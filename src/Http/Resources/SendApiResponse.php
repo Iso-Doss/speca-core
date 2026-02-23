@@ -78,13 +78,13 @@ class SendApiResponse extends JsonResource
     /**
      * Create a new resource instance.
      *
-     * @param bool $success The success.
-     * @param string $message The message
-     * @param array|MessageBag $errors The errors.
-     * @param array $warnings The warnings.
-     * @param array $input The input.
-     * @param array|LengthAwarePaginator|Collection $data The data.
-     * @param int $statusCode The status code.
+     * @param  bool  $success  The success.
+     * @param  string  $message  The message
+     * @param  array|MessageBag  $errors  The errors.
+     * @param  array  $warnings  The warnings.
+     * @param  array  $input  The input.
+     * @param  array|LengthAwarePaginator|Collection  $data  The data.
+     * @param  int  $statusCode  The status code.
      */
     public function __construct(bool $success = true, string $message = '', array|MessageBag $errors = [], array $warnings = [], array $input = [], array|LengthAwarePaginator|Collection $data = [], int $statusCode = 200)
     {
@@ -96,7 +96,7 @@ class SendApiResponse extends JsonResource
         $this->warnings = $warnings;
         $this->input = $input;
         $this->data = $data;
-        //$this->output = $data;
+        // $this->output = $data;
         $this->statusCode = $statusCode;
         $this->getResponseArray();
     }
@@ -116,13 +116,14 @@ class SendApiResponse extends JsonResource
             'warnings' => $this->warnings,
             'input' => $this->input,
             'output' => $this->data,
-            //'data' => $this->data,
+            // 'data' => $this->data,
         ];
         if ($this->success) {
             Log::info('Api response', $response);
         } else {
             Log::error('Api response', $response);
         }
+
         return $response;
     }
 
@@ -139,7 +140,7 @@ class SendApiResponse extends JsonResource
     /**
      * Get the response.
      *
-     * @param Request|null $request The request.
+     * @param  Request|null  $request  The request.
      * @return JsonResponse The JSON response.
      */
     public function response($request = null): JsonResponse
@@ -150,9 +151,8 @@ class SendApiResponse extends JsonResource
     /**
      * Customize the response for a request.
      *
-     * @param Request $request The request.
-     * @param JsonResponse $response The response.
-     * @return void
+     * @param  Request  $request  The request.
+     * @param  JsonResponse  $response  The response.
      */
     public function withResponse(Request $request, JsonResponse $response): void
     {

@@ -27,8 +27,6 @@ class FilterRequest extends BaseFilterRequest
 
     /**
      * Prepare the data for validation.
-     *
-     * @return void
      */
     protected function prepareForValidation(): void
     {

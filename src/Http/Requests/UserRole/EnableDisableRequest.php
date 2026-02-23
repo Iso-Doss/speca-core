@@ -15,15 +15,13 @@ class EnableDisableRequest extends BaseRequest
     public function rules(): array
     {
         return array_merge(parent::rules(), [
-            'user_role_id' => ['required', 'string', 'max:255', 'exists:' . config('permission.table_names.roles') . ',id'],
-            'new_status' => ['required', 'string', 'max:255', 'in:enabled,disabled']
+            'user_role_id' => ['required', 'string', 'max:255', 'exists:'.config('permission.table_names.roles').',id'],
+            'new_status' => ['required', 'string', 'max:255', 'in:enabled,disabled'],
         ]);
     }
 
     /**
      * Prepare the data for validation.
-     *
-     * @return void
      */
     protected function prepareForValidation(): void
     {
