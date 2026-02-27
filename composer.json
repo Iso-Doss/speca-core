@@ -50,7 +50,7 @@
         "spatie/laravel-activitylog": "^4.8",
         "spatie/laravel-package-tools": "^1.16",
         "spatie/laravel-pdf": "^1.5",
-        "spatie/laravel-permission": "^6.3",
+        "spatie/laravel-permission": "^7.2",
         "spatie/pdf-to-image": "^1.2",
         "tightenco/ziggy": "^2.4",
         "laravel/fortify": "^1.30"
