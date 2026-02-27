@@ -51,7 +51,7 @@
         "spatie/laravel-package-tools": "^1.16",
         "spatie/laravel-pdf": "^1.5",
         "spatie/laravel-permission": "^6.3",
-        "spatie/pdf-to-image": "^1.2",
+        "spatie/pdf-to-image": "^3.2",
         "tightenco/ziggy": "^2.4",
         "laravel/fortify": "^1.30"
     },
