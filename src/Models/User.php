@@ -28,23 +28,20 @@ class User extends Authenticatable
     protected $fillable = [
         'email',
         'phone_with_indicative',
-        'type',
         'gender',
         'password',
         'address',
         'birthday',
-        'activation_code',
-        'reset_password_code',
-        'full_name',
-        'avatar',
+        'company_name',
+        'first_name',
+        'lsat_name',
+        'profile_photo',
         'deleted_reason',
         'remember_token',
         'country_id',
         'user_profile_id',
         'activated_at',
         'notification_enable_at',
-        'activation_code_expire_at',
-        'reset_password_code_expire_at',
         'cgu_validated_at',
         'cgu_rested_at',
         'two_factor_enabled_at',
@@ -65,8 +62,6 @@ class User extends Authenticatable
     protected $casts = [
         'password' => 'hashed',
         'notification_enable_at' => 'datetime',
-        'activation_code_expire_at' => 'datetime',
-        'reset_password_code_expire_at' => 'datetime',
         'cgu_validated_at' => 'datetime',
         'cgu_rested_at' => 'datetime',
         'two_factor_enabled_at' => 'datetime',
@@ -101,9 +96,6 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-        'master_key',
-        'activation_code',
-        'reset_password_code',
     ];
 
     /**
@@ -114,26 +106,6 @@ class User extends Authenticatable
     public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class);
-    }
-
-    /**
-     * Get the user residence country.
-     *
-     * @return BelongsTo That belongs to.
-     */
-    public function residenceCountry(): BelongsTo
-    {
-        return $this->belongsTo(Country::class, 'residence_country_id');
-    }
-
-    /**
-     * Get the user nationality country.
-     *
-     * @return BelongsTo That belongs to.
-     */
-    public function nationalityCountry(): BelongsTo
-    {
-        return $this->belongsTo(Country::class, 'nationality_country_id');
     }
 
     /**

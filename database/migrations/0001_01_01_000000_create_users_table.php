@@ -17,7 +17,7 @@ return new class extends Migration
                 $table->uuid('id')->primary()->unique();
 
                 // Basic info
-                $table->string('email')->index();
+                $table->string('email')->unique()->index();
                 $table->string('phone_with_indicative')->nullable()->index();
 
                 $table->enum('gender', Gender::getValues())->nullable();
@@ -27,12 +27,11 @@ return new class extends Migration
                 $table->text('address')->nullable();
                 $table->date('birthday')->nullable();
 
-                $table->string('activation_code')->nullable();
-                $table->string('reset_password_code')->nullable();
+                $table->string('company_name')->nullable();
+                $table->string('first_name')->nullable();
+                $table->string('last_name')->nullable();
 
-                $table->string('full_name');
-
-                $table->string('avatar')->nullable();
+                $table->string('profile_photo')->nullable();
 
                 $table->text('deleted_reason')->nullable();
 
@@ -47,8 +46,6 @@ return new class extends Migration
                 // Activation & verification
                 $table->timestamp('activated_at')->nullable();
                 $table->timestamp('notification_enable_at')->nullable();
-                $table->timestamp('activation_code_expire_at')->nullable();
-                $table->timestamp('reset_password_code_expire_at')->nullable();
 
                 $table->timestamp('cgu_validated_at')->nullable();
                 $table->timestamp('cgu_rested_at')->nullable();
@@ -63,9 +60,6 @@ return new class extends Migration
                 // Timestamps & Soft delete
                 $table->timestamps();
                 $table->softDeletes();
-
-                $table->unique(['user_profile_id', 'email']);
-                $table->unique(['user_profile_id', 'phone_with_indicative']);
             });
         }
 
