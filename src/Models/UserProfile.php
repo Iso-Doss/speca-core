@@ -12,8 +12,10 @@ class UserProfile extends SpecaCoreBaseModel
      * @var list<string>
      */
     protected $fillable = [
+        'label',
         'name',
         'description',
+        'guard_name',
         'activated_at',
         'created_at',
         'updated_at',

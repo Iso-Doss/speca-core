@@ -10,25 +10,20 @@ class UserProfileSeeder extends Seeder
     public function run(): void
     {
         $profiles = [
-            'Marchand',
-            'Filiale d\'un marchand',
-            'Collaborateur d\'un marchand',
-            'Sous marchand d\'un marchand',
-            'Collaborateur interne',
-            'Service interne',
-            'Client',
-            'Payeur',
-            'Partenaire',
-            'Administrateur',
-            'Police',
-            'Régulateur',
+            [
+                'label' => 'Inspector',
+                'name' => 'inspector',
+                'description' => 'Inspector profil',
+            ],
+            [
+                'label' => '',
+                'name' => 'administrator',
+                'description' => 'Administrator profil',
+            ],
         ];
 
         foreach ($profiles as $profile) {
-            UserProfile::withTrashed()->updateOrCreate(['name' => $profile], [
-                'name' => $profile,
-                'description' => 'Profil '.$profile,
-            ]);
+            UserProfile::withTrashed()->updateOrCreate(['name' => $profile['name']], $profile);
         }
     }
 }
