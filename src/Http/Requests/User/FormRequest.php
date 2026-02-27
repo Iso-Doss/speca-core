@@ -19,14 +19,12 @@ class FormRequest extends BaseRequest
             'email' => ['required', 'email:strict', 'max:255'],
             'full_name' => ['required', 'string', 'max:255'],
             'user_roles' => ['required', 'array'],
-            'user_roles.*' => ['required', 'string', 'exists:' . config('permission.table_names.roles') . ',id'],
+            'user_roles.*' => ['required', 'string', 'exists:'.config('permission.table_names.roles').',id'],
         ]);
     }
 
     /**
      * Prepare the data for validation.
-     *
-     * @return void
      */
     protected function prepareForValidation(): void
     {

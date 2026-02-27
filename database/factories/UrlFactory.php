@@ -9,7 +9,7 @@ class UrlFactory
     /**
      * The model.
      *
-     * @var string $model The model.
+     * @var string The model.
      */
     protected string $model = Url::class;
 

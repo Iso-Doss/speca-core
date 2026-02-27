@@ -24,22 +24,22 @@ class UserPermissionController extends Controller
      */
     public function __construct()
     {
-        //$this->middleware('permission:list-user-permission|show-user-permission|create-user-permission|update-user-permission|enable-disable-user-permission|delete-user-permission|restore-user-permission|force-delete-user-permission', ['only' => ['index']]);
-        //$this->middleware('permission:show-user-permission', ['only' => ['show']]);
-        //$this->middleware('permission:create-user-permission', ['only' => ['create']]);
-        //$this->middleware('permission:update-user-permission', ['only' => ['update']]);
-        //$this->middleware('permission:enable-disable-user-permission', ['only' => ['enableOrDisable']]);
-        //$this->middleware('permission:group-action-user-permission', ['only' => ['groupAction']]);
-        //$this->middleware('permission:export-user-permission', ['only' => ['export']]);
-        //$this->middleware('permission:delete-user-permission', ['only' => ['delete']]);
-        //$this->middleware('permission:restore-user-permission', ['only' => ['restore']]);
-        //$this->middleware('permission:force-delete-user-permission', ['only' => ['forceDelete']]);
+        // $this->middleware('permission:list-user-permission|show-user-permission|create-user-permission|update-user-permission|enable-disable-user-permission|delete-user-permission|restore-user-permission|force-delete-user-permission', ['only' => ['index']]);
+        // $this->middleware('permission:show-user-permission', ['only' => ['show']]);
+        // $this->middleware('permission:create-user-permission', ['only' => ['create']]);
+        // $this->middleware('permission:update-user-permission', ['only' => ['update']]);
+        // $this->middleware('permission:enable-disable-user-permission', ['only' => ['enableOrDisable']]);
+        // $this->middleware('permission:group-action-user-permission', ['only' => ['groupAction']]);
+        // $this->middleware('permission:export-user-permission', ['only' => ['export']]);
+        // $this->middleware('permission:delete-user-permission', ['only' => ['delete']]);
+        // $this->middleware('permission:restore-user-permission', ['only' => ['restore']]);
+        // $this->middleware('permission:force-delete-user-permission', ['only' => ['forceDelete']]);
     }
 
     /**
      * User permission list.
      *
-     * @param FilterRequest $request The request.
+     * @param  FilterRequest  $request  The request.
      * @return SendApiResponse The api response.
      */
     public function index(FilterRequest $request): SendApiResponse
@@ -75,7 +75,7 @@ class UserPermissionController extends Controller
     /**
      * User permission details.
      *
-     * @param string $userPermissionId The user permission id.
+     * @param  string  $userPermissionId  The user permission id.
      * @return SendApiResponse The api response.
      */
     public function show(string $userPermissionId): SendApiResponse
@@ -108,7 +108,7 @@ class UserPermissionController extends Controller
     /**
      * Create the user permission.
      *
-     * @param FormRequest $request The request.
+     * @param  FormRequest  $request  The request.
      * @return SendApiResponse The api response.
      */
     public function create(FormRequest $request): SendApiResponse
@@ -116,11 +116,11 @@ class UserPermissionController extends Controller
         $requestData = $request->validated();
         $userPermission = UserPermission::create($requestData)?->refresh();
 
-        if (!empty($requestData['user_permission_categories'])) {
+        if (! empty($requestData['user_permission_categories'])) {
             $userPermission->userPermissionCategories()->sync($requestData['user_permission_categories']);
         }
 
-        if (!empty($requestData['user_roles'])) {
+        if (! empty($requestData['user_roles'])) {
             $userPermission->roles()->sync($requestData['user_roles']);
         }
 
@@ -145,8 +145,8 @@ class UserPermissionController extends Controller
     /**
      * Update the user permission.
      *
-     * @param FormRequest $request The request.
-     * @param string $userPermissionId The user permission id.
+     * @param  FormRequest  $request  The request.
+     * @param  string  $userPermissionId  The user permission id.
      * @return SendApiResponse The api response.
      */
     public function update(FormRequest $request, string $userPermissionId): SendApiResponse
@@ -160,11 +160,11 @@ class UserPermissionController extends Controller
 
         $userPermission->update($requestData);
 
-        if (!empty($requestData['user_permission_categories'])) {
+        if (! empty($requestData['user_permission_categories'])) {
             $userPermission->userPermissionCategories()->sync($requestData['user_permission_categories']);
         }
 
-        if (!empty($requestData['user_roles'])) {
+        if (! empty($requestData['user_roles'])) {
             $userPermission->roles()->sync($requestData['user_roles']);
         }
 
@@ -189,15 +189,15 @@ class UserPermissionController extends Controller
     /**
      * Enable or disable the user permission.
      *
-     * @param EnableDisableRequest $request The request.
-     * @param string $userPermissionId The user permission id.
+     * @param  EnableDisableRequest  $request  The request.
+     * @param  string  $userPermissionId  The user permission id.
      * @return SendApiResponse The api response.
      */
     public function enableOrDisable(EnableDisableRequest $request, string $userPermissionId): SendApiResponse
     {
         $requestData = $request->validated();
 
-        $userPermission = modelExist(UserPermission::getModel(), $userPermissionId, 'user-permission', ('enabled' == $requestData['new_status']) ? 'activated' : 'deactivated', $requestData);
+        $userPermission = modelExist(UserPermission::getModel(), $userPermissionId, 'user-permission', ($requestData['new_status'] == 'enabled') ? 'activated' : 'deactivated', $requestData);
         if ($userPermission instanceof SendApiResponse) {
             return $userPermission;
         }
@@ -214,7 +214,7 @@ class UserPermissionController extends Controller
 
         addActivityLog(
             model: UserPermission::getModel(),
-            event: 'user-permission-' . ($activatedAt ? 'activated' : 'deactivated'),
+            event: 'user-permission-'.($activatedAt ? 'activated' : 'deactivated'),
             properties: ['input' => $requestData, 'output' => $output],
             logDescription: __('speca-core::activity-log.user-permission.' . ($activatedAt ? 'activated' : 'deactivated'), ['user_permission' => $userPermission->label])
         );
@@ -232,7 +232,7 @@ class UserPermissionController extends Controller
     /**
      * Apply a group action on the user permission.
      *
-     * @param GroupActionRequest $request The request.
+     * @param  GroupActionRequest  $request  The request.
      * @return SendApiResponse The api response.
      */
     public static function groupAction(GroupActionRequest $request): SendApiResponse
@@ -253,7 +253,7 @@ class UserPermissionController extends Controller
 
             addActivityLog(
                 model: UserPermission::getModel(),
-                event: 'user-permission-group-action-' . strtolower($requestData['action']),
+                event: 'user-permission-group-action-'.strtolower($requestData['action']),
                 properties: ['input' => $requestData, 'output' => $userPermissions->get()->toArray()],
                 logDescription: __('speca-core::activity-log.user-permission.group-action', ['action' => GroupActionType::from($requestData['action'])->label()])
             );
@@ -268,7 +268,7 @@ class UserPermissionController extends Controller
         } else {
             addActivityLog(
                 model: UserPermission::getModel(),
-                event: 'user-permission-group-action-' . strtolower($requestData['action']) . '-attempt',
+                event: 'user-permission-group-action-'.strtolower($requestData['action']).'-attempt',
                 properties: ['input' => $requestData, 'output' => $userPermissions->get()->toArray()],
                 logDescription: __('speca-core::activity-log.user-permission.group-action-attempt', ['action' => GroupActionType::from($requestData['action'])->label()])
             );
@@ -286,8 +286,9 @@ class UserPermissionController extends Controller
     /**
      * Export the user permissions.
      *
-     * @param FilterRequest $request The request.
+     * @param  FilterRequest  $request  The request.
      * @return SendApiResponse The api response.
+     *
      * @throws Exception | WriterException The exception.
      */
     public static function export(FilterRequest $request): SendApiResponse
@@ -297,7 +298,7 @@ class UserPermissionController extends Controller
         $columnsLabel = ['Nom', 'Date de création', 'Statut'];
         $userPermissions = self::userPermissionRequest($requestData)->get($columnsName)->toArray();
 
-        Excel::store(new ExportModel($userPermissions, $columnsLabel), 'permissions/permissions_export' . now()->format('Y-m-d') . '.xlsx', 'public');
+        Excel::store(new ExportModel($userPermissions, $columnsLabel), 'permissions/permissions_export'.now()->format('Y-m-d').'.xlsx', 'public');
         // Todo : Mettre en place l'exportation sur le space de Digital Ocean (S3).
         // Excel::store(new ExportModel($userPermissions, $columnsLabel), 'permissions/permissions_export' . now()->format('Y-m-d') . '.xlsx', 'public');
 
@@ -320,8 +321,8 @@ class UserPermissionController extends Controller
     /**
      * Delete the user permission.
      *
-     * @param BasePasswordConfirmationRequest $request The request.
-     * @param string $userPermissionId The user permission id.
+     * @param  BasePasswordConfirmationRequest  $request  The request.
+     * @param  string  $userPermissionId  The user permission id.
      * @return SendApiResponse The api response.
      */
     public function delete(BasePasswordConfirmationRequest $request, string $userPermissionId): SendApiResponse
@@ -362,7 +363,7 @@ class UserPermissionController extends Controller
     /**
      * Restore the user permission.
      *
-     * @param string $userPermissionId The user permission id.
+     * @param  string  $userPermissionId  The user permission id.
      * @return SendApiResponse The api response.
      */
     public function restore(string $userPermissionId): SendApiResponse
@@ -385,7 +386,6 @@ class UserPermissionController extends Controller
             logDescription: __('speca-core::activity-log.user-permission.restored', ['user_permission' => $userPermission->label])
         );
 
-
         return new SendApiResponse(
             success: true,
             message: __('speca-core::messages.user-permission.restored'),
@@ -398,8 +398,8 @@ class UserPermissionController extends Controller
     /**
      * Force delete the user permission.
      *
-     * @param BasePasswordConfirmationRequest $request The request.
-     * @param string $userPermissionId The user permission id.
+     * @param  BasePasswordConfirmationRequest  $request  The request.
+     * @param  string  $userPermissionId  The user permission id.
      * @return SendApiResponse The api response.
      */
     public function forceDelete(BasePasswordConfirmationRequest $request, string $userPermissionId): SendApiResponse
@@ -440,28 +440,28 @@ class UserPermissionController extends Controller
     /**
      * User permission request.
      *
-     * @param array $requestData The request data.
+     * @param  array  $requestData  The request data.
      * @return mixed The user permission request.
      */
     public static function userPermissionRequest(array $requestData = []): mixed
     {
         return UserPermission::with('userPermissionCategories')
-            ->when($requestData['user_permission_id'] ?? '', fn($q) => $q->where('id', $requestData['user_permission_id']))
-            ->when($requestData['label'] ?? '', fn($q) => $q->where('label', 'like', '%' . $requestData['label'] . '%'))
-            ->when($requestData['name'] ?? '', fn($q) => $q->where('name', 'like', '%' . $requestData['name'] . '%'))
-            ->when($requestData['guard_name'] ?? '', fn($q) => $q->where('guard_name', $requestData['guard_name']))
-            ->when($requestData['description'] ?? '', fn($q) => $q->where('description', 'like', '%' . $requestData['description'] . '%'))
-            ->when(array_key_exists('activated', $requestData), fn($q) => $requestData['activated'] ? $q->whereNotNull('activated_at') : $q->whereNull('activated_at'))
-            ->when(array_key_exists('archived', $requestData), fn($q) => $requestData['archived'] ? $q->onlyTrashed() : $q->withTrashed())
+            ->when($requestData['user_permission_id'] ?? '', fn ($q) => $q->where('id', $requestData['user_permission_id']))
+            ->when($requestData['label'] ?? '', fn ($q) => $q->where('label', 'like', '%'.$requestData['label'].'%'))
+            ->when($requestData['name'] ?? '', fn ($q) => $q->where('name', 'like', '%'.$requestData['name'].'%'))
+            ->when($requestData['guard_name'] ?? '', fn ($q) => $q->where('guard_name', $requestData['guard_name']))
+            ->when($requestData['description'] ?? '', fn ($q) => $q->where('description', 'like', '%'.$requestData['description'].'%'))
+            ->when(array_key_exists('activated', $requestData), fn ($q) => $requestData['activated'] ? $q->whereNotNull('activated_at') : $q->whereNull('activated_at'))
+            ->when(array_key_exists('archived', $requestData), fn ($q) => $requestData['archived'] ? $q->onlyTrashed() : $q->withTrashed())
             ->when($requestData['search'] ?? '', function ($q) use ($requestData) {
                 $q->where(function ($subQuery) use ($requestData) {
-                    $subQuery->where('label', 'like', '%' . $requestData['search'] . '%')
-                        ->orWhere('name', 'like', '%' . $requestData['search'] . '%')
-                        ->orWhere('description', 'like', '%' . $requestData['search'] . '%');
+                    $subQuery->where('label', 'like', '%'.$requestData['search'].'%')
+                        ->orWhere('name', 'like', '%'.$requestData['search'].'%')
+                        ->orWhere('description', 'like', '%'.$requestData['search'].'%');
                 });
             })
-            ->when($requestData['check'] ?? '', fn($q) => $q->whereIn('id', $requestData['check']))
-            ->when($requestData['uncheck'] ?? '', fn($q) => $q->whereNotIn('id', $requestData['uncheck']))
+            ->when($requestData['check'] ?? '', fn ($q) => $q->whereIn('id', $requestData['check']))
+            ->when($requestData['uncheck'] ?? '', fn ($q) => $q->whereNotIn('id', $requestData['uncheck']))
             ->latest();
     }
 }

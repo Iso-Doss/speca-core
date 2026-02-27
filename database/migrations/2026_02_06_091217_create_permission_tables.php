@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -20,7 +21,7 @@ return new class extends Migration {
         throw_if(empty($tableNames), Exception::class, 'Error: config/permission.php not loaded. Run [php artisan config:clear] and try again.');
         throw_if($teams && empty($columnNames['team_foreign_key'] ?? null), Exception::class, 'Error: team_foreign_key on config/permission.php not loaded. Run [php artisan config:clear] and try again.');
 
-        if (!Schema::hasTable($tableNames['permission_categories'])) {
+        if (! Schema::hasTable($tableNames['permission_categories'])) {
             Schema::create($tableNames['permission_categories'], static function (Blueprint $table) {
                 // $table->engine('InnoDB');
                 // $table->bigIncrements('id'); // permission id
@@ -37,7 +38,7 @@ return new class extends Migration {
             });
         }
 
-        if (!Schema::hasTable($tableNames['permissions'])) {
+        if (! Schema::hasTable($tableNames['permissions'])) {
             Schema::create($tableNames['permissions'], static function (Blueprint $table) {
                 // $table->engine('InnoDB');
                 // $table->bigIncrements('id'); // permission id
@@ -54,7 +55,7 @@ return new class extends Migration {
             });
         }
 
-        if (!Schema::hasTable($tableNames['roles'])) {
+        if (! Schema::hasTable($tableNames['roles'])) {
             Schema::create($tableNames['roles'], static function (Blueprint $table) use ($teams, $columnNames) {
                 // $table->engine('InnoDB');
                 // $table->bigIncrements('id'); // role id
@@ -78,7 +79,7 @@ return new class extends Migration {
             });
         }
 
-        if (!Schema::hasTable($tableNames['model_has_permissions'])) {
+        if (! Schema::hasTable($tableNames['model_has_permissions'])) {
             Schema::create($tableNames['model_has_permissions'], static function (Blueprint $table) use ($tableNames, $columnNames, $pivotPermission, $teams) {
                 $table->uuid($pivotPermission);
 
@@ -104,7 +105,7 @@ return new class extends Migration {
             });
         }
 
-        if (!Schema::hasTable($tableNames['model_has_roles'])) {
+        if (! Schema::hasTable($tableNames['model_has_roles'])) {
             Schema::create($tableNames['model_has_roles'], static function (Blueprint $table) use ($tableNames, $columnNames, $pivotRole, $teams) {
                 $table->uuid($pivotRole);
 
@@ -129,7 +130,7 @@ return new class extends Migration {
             });
         }
 
-        if (!Schema::hasTable($tableNames['role_has_permissions'])) {
+        if (! Schema::hasTable($tableNames['role_has_permissions'])) {
             Schema::create($tableNames['role_has_permissions'], static function (Blueprint $table) use ($tableNames, $pivotRole, $pivotPermission) {
                 $table->uuid($pivotPermission);
                 $table->uuid($pivotRole);
@@ -148,8 +149,8 @@ return new class extends Migration {
             });
         }
 
-        if (!Schema::hasTable($tableNames['category_has_permissions'])) {
-            Schema::create($tableNames['category_has_permissions'], static function (Blueprint $table) use ($tableNames, $pivotRole, $pivotPermission, $pivotCategory) {
+        if (! Schema::hasTable($tableNames['category_has_permissions'])) {
+            Schema::create($tableNames['category_has_permissions'], static function (Blueprint $table) use ($tableNames, $pivotPermission, $pivotCategory) {
                 $table->uuid($pivotPermission);
                 $table->uuid($pivotCategory);
 

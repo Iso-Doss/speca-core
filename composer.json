@@ -25,7 +25,7 @@
         "ext-json": "*",
         "barryvdh/laravel-dompdf": "^3.1",
         "bugsnag/bugsnag-laravel": "^2.29",
-        "dedoc/scramble": "^0.12.23",
+        "dedoc/scramble": "^0.13.14",
         "doctrine/dbal": "^3.6",
         "giggsey/libphonenumber-for-php": "^8.13",
         "guzzlehttp/guzzle": "^7.2",

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Speca\SpecaCore\Http\Requests\UserRole;
 
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -16,7 +15,7 @@ class FilterRequest extends BaseFilterRequest
     public function rules(): array
     {
         return array_merge(parent::rules(), [
-            'user_role_id' => ['nullable', 'string', 'max:255', 'exists:' . config('permission.table_names.roles') . ',id'],
+            'user_role_id' => ['nullable', 'string', 'max:255', 'exists:'.config('permission.table_names.roles').',id'],
             'label' => ['nullable', 'string', 'max:255'],
             'name' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:255'],
@@ -26,8 +25,6 @@ class FilterRequest extends BaseFilterRequest
 
     /**
      * Prepare the data for validation.
-     *
-     * @return void
      */
     protected function prepareForValidation(): void
     {

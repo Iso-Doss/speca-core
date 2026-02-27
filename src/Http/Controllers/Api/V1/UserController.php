@@ -2,17 +2,15 @@
 
 namespace Speca\SpecaCore\Http\Controllers\Api\V1;
 
-
-
 use Maatwebsite\Excel\Facades\Excel;
 use Speca\SpecaCore\Enums\GroupActionType;
 use Speca\SpecaCore\Export\ExportModel;
 use Speca\SpecaCore\Http\Controllers\Controller;
+use Speca\SpecaCore\Http\Requests\BasePasswordConfirmationRequest;
 use Speca\SpecaCore\Http\Requests\User\EnableDisableRequest;
 use Speca\SpecaCore\Http\Requests\User\FilterRequest;
 use Speca\SpecaCore\Http\Requests\User\FormRequest;
 use Speca\SpecaCore\Http\Requests\User\GroupActionRequest;
-use Speca\SpecaCore\Http\Requests\BasePasswordConfirmationRequest;
 use Speca\SpecaCore\Http\Resources\SendApiResponse;
 use Speca\SpecaCore\Jobs\UserConfirmationMail;
 use Speca\SpecaCore\Models\User;
@@ -24,22 +22,22 @@ class UserController extends Controller
      */
     public function __construct()
     {
-        //$this->middleware('permission:list-user|show-user|create-user|update-user|enable-disable-user|delete-user|restore-user|force-delete-user', ['only' => ['index']]);
-        //$this->middleware('permission:show-user', ['only' => ['show']]);
-        //$this->middleware('permission:create-user', ['only' => ['create']]);
-        //$this->middleware('permission:update-user', ['only' => ['update']]);
-        //$this->middleware('permission:enable-disable-user', ['only' => ['enableOrDisable']]);
-        //$this->middleware('permission:group-action-user', ['only' => ['groupAction']]);
-        //$this->middleware('permission:export-user', ['only' => ['export']]);
-        //$this->middleware('permission:delete-user', ['only' => ['delete']]);
-        //$this->middleware('permission:restore-user', ['only' => ['restore']]);
-        //$this->middleware('permission:force-delete-user', ['only' => ['forceDelete']]);
+        // $this->middleware('permission:list-user|show-user|create-user|update-user|enable-disable-user|delete-user|restore-user|force-delete-user', ['only' => ['index']]);
+        // $this->middleware('permission:show-user', ['only' => ['show']]);
+        // $this->middleware('permission:create-user', ['only' => ['create']]);
+        // $this->middleware('permission:update-user', ['only' => ['update']]);
+        // $this->middleware('permission:enable-disable-user', ['only' => ['enableOrDisable']]);
+        // $this->middleware('permission:group-action-user', ['only' => ['groupAction']]);
+        // $this->middleware('permission:export-user', ['only' => ['export']]);
+        // $this->middleware('permission:delete-user', ['only' => ['delete']]);
+        // $this->middleware('permission:restore-user', ['only' => ['restore']]);
+        // $this->middleware('permission:force-delete-user', ['only' => ['forceDelete']]);
     }
 
     /**
      * User list.
      *
-     * @param FilterRequest $request The request.
+     * @param  FilterRequest  $request  The request.
      * @return SendApiResponse The api response.
      */
     public function index(FilterRequest $request): SendApiResponse
@@ -75,7 +73,7 @@ class UserController extends Controller
     /**
      * User details.
      *
-     * @param string $userId The user id.
+     * @param  string  $userId  The user id.
      * @return SendApiResponse The api response.
      */
     public function show(string $userId): SendApiResponse
@@ -108,7 +106,7 @@ class UserController extends Controller
     /**
      * Create the user.
      *
-     * @param FormRequest $request The request.
+     * @param  FormRequest  $request  The request.
      * @return SendApiResponse The api response.
      */
     public function create(FormRequest $request): SendApiResponse
@@ -116,7 +114,7 @@ class UserController extends Controller
         $requestData = $request->validated();
         $user = User::create($requestData)?->refresh();
 
-        if (!empty($requestData['user_roles'])) {
+        if (! empty($requestData['user_roles'])) {
             $user->syncRoles($requestData['user_roles']);
         }
 
@@ -125,7 +123,6 @@ class UserController extends Controller
         $frontendUrl = config('paydunya.front_end_url') ;
         $mailData = array_merge($user->toArray(), ['link' => $frontendUrl . '/user/' . $user->id,]);
         UserConfirmationMail::dispatch($user->email, __('Confirmation d\'inscription'), 'speca-core::email.user-confirmation', $mailData);
-
 
         addActivityLog(
             model: User::getModel(),
@@ -146,7 +143,7 @@ class UserController extends Controller
     /**
      * Re-send the email confirmation to the user.
      *
-     * @param string $email The user email.
+     * @param  string  $email  The user email.
      * @return SendApiResponse The api response.
      */
     public function resendConfirmationEmail(string $email): SendApiResponse
@@ -155,7 +152,7 @@ class UserController extends Controller
 
         $user = User::where('email', '=', $email)->first();
 
-        if (!$user) {
+        if (! $user) {
             addActivityLog(
                 model: User::getModel(),
                 event: 'user-resend-email-confirmation-attempt',
@@ -170,7 +167,6 @@ class UserController extends Controller
                 statusCode: 404,
             );
         }
-
 
         $frontendUrl = config('paydunya.front_end_url') ;
         $mailData = array_merge($user->toArray(), ['link' => $frontendUrl . '/user/' . $user->id,]);
@@ -197,8 +193,8 @@ class UserController extends Controller
     /**
      * Update the user.
      *
-     * @param FormRequest $request The request.
-     * @param string $userId The user id.
+     * @param  FormRequest  $request  The request.
+     * @param  string  $userId  The user id.
      * @return SendApiResponse The api response.
      */
     public function update(FormRequest $request, string $userId): SendApiResponse
@@ -212,7 +208,7 @@ class UserController extends Controller
 
         $user->update($requestData);
 
-        if (!empty($requestData['user_roles'])) {
+        if (! empty($requestData['user_roles'])) {
             $user->syncRoles($requestData['user_roles']);
         }
 
@@ -237,15 +233,15 @@ class UserController extends Controller
     /**
      * Enable or disable the user.
      *
-     * @param EnableDisableRequest $request The request.
-     * @param string $userId The user id.
+     * @param  EnableDisableRequest  $request  The request.
+     * @param  string  $userId  The user id.
      * @return SendApiResponse The api response.
      */
     public function enableOrDisable(EnableDisableRequest $request, string $userId): SendApiResponse
     {
         $requestData = $request->validated();
 
-        $user = modelExist(User::getModel(), $userId, 'user', ('enabled' == $requestData['new_status']) ? 'activated' : 'deactivated', $requestData);
+        $user = modelExist(User::getModel(), $userId, 'user', ($requestData['new_status'] == 'enabled') ? 'activated' : 'deactivated', $requestData);
         if ($user instanceof SendApiResponse) {
             return $user;
         }
@@ -262,7 +258,7 @@ class UserController extends Controller
 
         addActivityLog(
             model: User::getModel(),
-            event: 'user-' . ($activatedAt ? 'activated' : 'deactivated'),
+            event: 'user-'.($activatedAt ? 'activated' : 'deactivated'),
             properties: ['input' => $requestData, 'output' => $output],
             logDescription: __('speca-core::activity-log.user.' . ($activatedAt ? 'activated' : 'deactivated'), ['email' => $user->email, 'role' => $user->roles->first()?->label])
         );
@@ -279,7 +275,7 @@ class UserController extends Controller
     /**
      * Apply a group action on the user.
      *
-     * @param GroupActionRequest $request The request.
+     * @param  GroupActionRequest  $request  The request.
      * @return SendApiResponse The api response.
      */
     public static function groupAction(GroupActionRequest $request): SendApiResponse
@@ -300,7 +296,7 @@ class UserController extends Controller
 
             addActivityLog(
                 model: User::getModel(),
-                event: 'user-group-action-' . strtolower($requestData['action']),
+                event: 'user-group-action-'.strtolower($requestData['action']),
                 properties: ['input' => $requestData, 'output' => $users->get()->toArray()],
                 logDescription: __('speca-core::activity-log.user.group-action', ['action' => GroupActionType::from($requestData['action'])->label()])
             );
@@ -315,7 +311,7 @@ class UserController extends Controller
         } else {
             addActivityLog(
                 model: User::getModel(),
-                event: 'user-group-action-' . strtolower($requestData['action']) . '-attempt',
+                event: 'user-group-action-'.strtolower($requestData['action']).'-attempt',
                 properties: ['input' => $requestData, 'output' => $users->get()->toArray()],
                 logDescription: __('speca-core::activity-log.user.group-action-attempt', ['action' => GroupActionType::from($requestData['action'])->label()])
             );
@@ -333,17 +329,17 @@ class UserController extends Controller
     /**
      * Export the users.
      *
-     * @param FilterRequest $request The request.
+     * @param  FilterRequest  $request  The request.
      * @return SendApiResponse The api response.
      */
     public static function export(FilterRequest $request): SendApiResponse
     {
         $requestData = $request->validated();
-        $columnsName = ['full_name', 'phone_with_indicative' ,'created_at'];
+        $columnsName = ['full_name', 'phone_with_indicative', 'created_at'];
         $columnsLabel = ['Nom complet', 'Numéro de téléphone', 'Date de création'];
         $users = self::userRequest($requestData)->get($columnsName)->toArray();
 
-        Excel::store(new ExportModel($users, $columnsLabel), 'users/users_export' . now()->format('Y-m-d') . '.xlsx', 'public');
+        Excel::store(new ExportModel($users, $columnsLabel), 'users/users_export'.now()->format('Y-m-d').'.xlsx', 'public');
         // Todo : Mettre en place l'exportation sur le space de Digital Ocean (S3).
         // Excel::store(new ExportModel($users, $columnsLabel), 'users/users' . now()->format('Y-m-d') . '.xlsx', 'public');
 
@@ -366,8 +362,8 @@ class UserController extends Controller
     /**
      * Delete the user.
      *
-     * @param BasePasswordConfirmationRequest $request The request.
-     * @param string $userId The user id.
+     * @param  BasePasswordConfirmationRequest  $request  The request.
+     * @param  string  $userId  The user id.
      * @return SendApiResponse The api response.
      */
     public function delete(BasePasswordConfirmationRequest $request, string $userId): SendApiResponse
@@ -408,7 +404,7 @@ class UserController extends Controller
     /**
      * Restore the user.
      *
-     * @param string $userId The user id.
+     * @param  string  $userId  The user id.
      * @return SendApiResponse The api response.
      */
     public function restore(string $userId): SendApiResponse
@@ -443,8 +439,8 @@ class UserController extends Controller
     /**
      * Force delete the user.
      *
-     * @param BasePasswordConfirmationRequest $request The request.
-     * @param string $userId The user id.
+     * @param  BasePasswordConfirmationRequest  $request  The request.
+     * @param  string  $userId  The user id.
      * @return SendApiResponse The api response.
      */
     public function forceDelete(BasePasswordConfirmationRequest $request, string $userId): SendApiResponse
@@ -485,25 +481,25 @@ class UserController extends Controller
     /**
      * User request.
      *
-     * @param array $requestData The request data.
+     * @param  array  $requestData  The request data.
      * @return mixed The user request.
      */
     public static function userRequest(array $requestData = []): mixed
     {
-        return User::with(['roles', 'permissions', 'userProfiles'])->when($requestData['user_id'] ?? '', fn($q) => $q->where('id', $requestData['user_id']))
-            ->when($requestData['email'] ?? '', fn($q) => $q->where('email', 'like', '%' . $requestData['email'] . '%'))
-            ->when($requestData['phone_with_indicative'] ?? '', fn($q) => $q->where('phone_with_indicative', 'like', '%' . $requestData['phone_with_indicative'] . '%'))
-            ->when($requestData['type'] ?? '', fn($q) => $q->where('type', 'like', '%' . $requestData['type'] . '%'))
-            ->when($requestData['gender'] ?? '', fn($q) => $q->where('gender', 'like', '%' . $requestData['gender'] . '%'))
-            ->when($requestData['address'] ?? '', fn($q) => $q->where('address', 'like', '%' . $requestData['address'] . '%'))
-            ->when($requestData['birthday'] ?? '', fn($q) => $q->where('birthday', $requestData['birthday']))
-            ->when($requestData['full_name'] ?? '', fn($q) => $q->where('full_name', 'like', '%' . $requestData['full_name'] . '%'))
-            ->when($requestData['legal_name'] ?? '', fn($q) => $q->where('legal_name', 'like', '%' . $requestData['legal_name'] . '%'))
-            ->when($requestData['commercial_name'] ?? '', fn($q) => $q->where('commercial_name', 'like', '%' . $requestData['commercial_name'] . '%'))
-            ->when($requestData['profession_title'] ?? '', fn($q) => $q->where('profession_title', 'like', '%' . $requestData['profession_title'] . '%'))
-            ->when($requestData['country_id'] ?? '', fn($q) => $q->where('country_id', '=' . $requestData['country_id']))
-            ->when($requestData['residence_country_id'] ?? '', fn($q) => $q->where('residence_country_id', '=' . $requestData['residence_country_id']))
-            ->when($requestData['nationality_country_id'] ?? '', fn($q) => $q->where('nationality_country_id', '=' . $requestData['nationality_country_id']))
+        return User::with(['roles', 'permissions', 'userProfiles'])->when($requestData['user_id'] ?? '', fn ($q) => $q->where('id', $requestData['user_id']))
+            ->when($requestData['email'] ?? '', fn ($q) => $q->where('email', 'like', '%'.$requestData['email'].'%'))
+            ->when($requestData['phone_with_indicative'] ?? '', fn ($q) => $q->where('phone_with_indicative', 'like', '%'.$requestData['phone_with_indicative'].'%'))
+            ->when($requestData['type'] ?? '', fn ($q) => $q->where('type', 'like', '%'.$requestData['type'].'%'))
+            ->when($requestData['gender'] ?? '', fn ($q) => $q->where('gender', 'like', '%'.$requestData['gender'].'%'))
+            ->when($requestData['address'] ?? '', fn ($q) => $q->where('address', 'like', '%'.$requestData['address'].'%'))
+            ->when($requestData['birthday'] ?? '', fn ($q) => $q->where('birthday', $requestData['birthday']))
+            ->when($requestData['full_name'] ?? '', fn ($q) => $q->where('full_name', 'like', '%'.$requestData['full_name'].'%'))
+            ->when($requestData['legal_name'] ?? '', fn ($q) => $q->where('legal_name', 'like', '%'.$requestData['legal_name'].'%'))
+            ->when($requestData['commercial_name'] ?? '', fn ($q) => $q->where('commercial_name', 'like', '%'.$requestData['commercial_name'].'%'))
+            ->when($requestData['profession_title'] ?? '', fn ($q) => $q->where('profession_title', 'like', '%'.$requestData['profession_title'].'%'))
+            ->when($requestData['country_id'] ?? '', fn ($q) => $q->where('country_id', '='.$requestData['country_id']))
+            ->when($requestData['residence_country_id'] ?? '', fn ($q) => $q->where('residence_country_id', '='.$requestData['residence_country_id']))
+            ->when($requestData['nationality_country_id'] ?? '', fn ($q) => $q->where('nationality_country_id', '='.$requestData['nationality_country_id']))
             ->when($requestData['role_id'] ?? '', function ($q) use ($requestData) {
                 $q->whereHas('roles', function ($query) use ($requestData) {
                     $query->where('id', '=', $requestData['role_id']);
@@ -519,17 +515,17 @@ class UserController extends Controller
                     $query->where('id', '=', $requestData['permission_id']);
                 });
             })
-            ->when(array_key_exists('activated', $requestData), fn($q) => $requestData['activated'] ? $q->whereNotNull('activated_at') : $q->whereNull('activated_at'))
-            ->when(array_key_exists('archived', $requestData), fn($q) => $requestData['archived'] ? $q->onlyTrashed() : $q->withTrashed())
+            ->when(array_key_exists('activated', $requestData), fn ($q) => $requestData['activated'] ? $q->whereNotNull('activated_at') : $q->whereNull('activated_at'))
+            ->when(array_key_exists('archived', $requestData), fn ($q) => $requestData['archived'] ? $q->onlyTrashed() : $q->withTrashed())
             ->when($requestData['search'] ?? '', function ($q) use ($requestData) {
                 $q->where(function ($subQuery) use ($requestData) {
-                    $subQuery->where('email', 'like', '%' . $requestData['email'] . '%')
-                        ->orWhere('phone_with_indicative', 'like', '%' . $requestData['phone_with_indicative'] . '%')
-                        ->orWhere('full_name', 'like', '%' . $requestData['full_name'] . '%');
+                    $subQuery->where('email', 'like', '%'.$requestData['email'].'%')
+                        ->orWhere('phone_with_indicative', 'like', '%'.$requestData['phone_with_indicative'].'%')
+                        ->orWhere('full_name', 'like', '%'.$requestData['full_name'].'%');
                 });
             })
-            ->when($requestData['check'] ?? '', fn($q) => $q->whereIn('id', $requestData['check']))
-            ->when($requestData['uncheck'] ?? '', fn($q) => $q->whereNotIn('id', $requestData['uncheck']))
+            ->when($requestData['check'] ?? '', fn ($q) => $q->whereIn('id', $requestData['check']))
+            ->when($requestData['uncheck'] ?? '', fn ($q) => $q->whereNotIn('id', $requestData['uncheck']))
             ->latest();
     }
 }

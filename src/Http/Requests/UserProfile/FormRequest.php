@@ -21,11 +21,8 @@ class FormRequest extends BaseRequest
         ]);
     }
 
-
     /**
      * Prepare the data for validation.
-     *
-     * @return void
      */
     protected function prepareForValidation(): void
     {

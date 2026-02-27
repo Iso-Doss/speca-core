@@ -16,14 +16,12 @@ class EnableDisableRequest extends BaseRequest
     {
         return array_merge(parent::rules(), [
             'country_id' => ['required', 'string', 'max:255', 'exists:countries,id'],
-            'new_status' => ['required', 'string', 'max:255', 'in:enabled,disabled']
+            'new_status' => ['required', 'string', 'max:255', 'in:enabled,disabled'],
         ]);
     }
 
     /**
      * Prepare the data for validation.
-     *
-     * @return void
      */
     protected function prepareForValidation(): void
     {

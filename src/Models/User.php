@@ -9,16 +9,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Speca\SpecaCore\Database\Factories\UserFactory;
-use Speca\SpecaCore\Traits\ModelTrait;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasPermissions;
 use Spatie\Permission\Traits\HasRoles;
+use Speca\SpecaCore\Database\Factories\UserFactory;
+use Speca\SpecaCore\Traits\ModelTrait;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes, LogsActivity, HasRoles, HasPermissions, HasUuids, ModelTrait;
+    use HasFactory, HasPermissions, HasRoles, HasUuids, LogsActivity, ModelTrait, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass-assignable.
@@ -103,7 +103,7 @@ class User extends Authenticatable
         'remember_token',
         'master_key',
         'activation_code',
-        'reset_password_code'
+        'reset_password_code',
     ];
 
     /**

@@ -5,13 +5,13 @@ namespace Speca\SpecaCore\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Speca\SpecaCore\Traits\ModelTrait;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Models\Role as SpatieRole;
+use Speca\SpecaCore\Traits\ModelTrait;
 
 class UserRole extends SpatieRole
 {
-    use HasFactory, HasUuids, SoftDeletes, LogsActivity, ModelTrait;
+    use HasFactory, HasUuids, LogsActivity, ModelTrait, SoftDeletes;
 
     /**
      * The attributes that are mass-assignable.
@@ -26,7 +26,7 @@ class UserRole extends SpatieRole
         'activated_at',
         'created_at',
         'updated_at',
-        'deleted_at'
+        'deleted_at',
     ];
 
     /**

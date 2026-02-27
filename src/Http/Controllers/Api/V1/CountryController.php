@@ -9,7 +9,6 @@ use Speca\SpecaCore\Http\Requests\Country\FormRequest;
 use Speca\SpecaCore\Http\Resources\SendApiResponse;
 use Speca\SpecaCore\Models\Country;
 
-
 class CountryController extends Controller
 {
     /**
@@ -17,20 +16,20 @@ class CountryController extends Controller
      */
     public function __construct()
     {
-        //$this->middleware('permission:list-country-category|show-country-category|create-country-category|update-country-category|enable-disable-country-category|delete-country-category|restore-country-category|force-delete-country-category', ['only' => ['index']]);
-        //$this->middleware('permission:show-country-category', ['only' => ['show']]);
-        //$this->middleware('permission:create-country-category', ['only' => ['create']]);
-        //$this->middleware('permission:update-country-category', ['only' => ['update']]);
-        //$this->middleware('permission:enable-disable-country-category', ['only' => ['enableOrDisable']]);
-        //$this->middleware('permission:delete-country-category', ['only' => ['delete']]);
-        //$this->middleware('permission:restore-country-category', ['only' => ['restore']]);
-        //$this->middleware('permission:force-delete-country-category', ['only' => ['forceDelete']]);
+        // $this->middleware('permission:list-country-category|show-country-category|create-country-category|update-country-category|enable-disable-country-category|delete-country-category|restore-country-category|force-delete-country-category', ['only' => ['index']]);
+        // $this->middleware('permission:show-country-category', ['only' => ['show']]);
+        // $this->middleware('permission:create-country-category', ['only' => ['create']]);
+        // $this->middleware('permission:update-country-category', ['only' => ['update']]);
+        // $this->middleware('permission:enable-disable-country-category', ['only' => ['enableOrDisable']]);
+        // $this->middleware('permission:delete-country-category', ['only' => ['delete']]);
+        // $this->middleware('permission:restore-country-category', ['only' => ['restore']]);
+        // $this->middleware('permission:force-delete-country-category', ['only' => ['forceDelete']]);
     }
 
     /**
      * Country list.
      *
-     * @param FilterRequest $request The request.
+     * @param  FilterRequest  $request  The request.
      * @return SendApiResponse The api response.
      */
     public static function index(FilterRequest $request): SendApiResponse
@@ -66,7 +65,7 @@ class CountryController extends Controller
     /**
      * Country details.
      *
-     * @param string $countryId The country id.
+     * @param  string  $countryId  The country id.
      * @return SendApiResponse The api response.
      */
     public static function show(string $countryId): SendApiResponse
@@ -96,7 +95,7 @@ class CountryController extends Controller
     /**
      * Create the country.
      *
-     * @param FormRequest $request The request.
+     * @param  FormRequest  $request  The request.
      * @return SendApiResponse The api response.
      */
     public static function create(FormRequest $request): SendApiResponse
@@ -126,8 +125,8 @@ class CountryController extends Controller
     /**
      * Update the country.
      *
-     * @param FormRequest $request The request.
-     * @param string $countryId The country id.
+     * @param  FormRequest  $request  The request.
+     * @param  string  $countryId  The country id.
      * @return SendApiResponse The api response.
      */
     public static function update(FormRequest $request, string $countryId): SendApiResponse
@@ -140,7 +139,7 @@ class CountryController extends Controller
         }
 
         $country->update($requestData);
-        if (!empty($requestData['user_permissions'])) {
+        if (! empty($requestData['user_permissions'])) {
             $country->userPermissions()->sync($requestData['user_permissions']);
         }
 
@@ -165,15 +164,15 @@ class CountryController extends Controller
     /**
      * Enable or disable the country.
      *
-     * @param EnableDisableRequest $request The request.
-     * @param string $countryId The country id.
+     * @param  EnableDisableRequest  $request  The request.
+     * @param  string  $countryId  The country id.
      * @return SendApiResponse The api response.
      */
     public static function enableOrDisable(EnableDisableRequest $request, string $countryId): SendApiResponse
     {
         $requestData = $request->validated();
 
-        $country = modelExist(Country::getModel(), $countryId, 'country', ('enabled' == $requestData['new_status']) ? 'activated' : 'deactivated', $requestData);
+        $country = modelExist(Country::getModel(), $countryId, 'country', ($requestData['new_status'] == 'enabled') ? 'activated' : 'deactivated', $requestData);
         if ($country instanceof SendApiResponse) {
             return $country;
         }
@@ -190,7 +189,7 @@ class CountryController extends Controller
 
         addActivityLog(
             model: Country::getModel(),
-            event: 'country-' . ($activatedAt ? 'activated' : 'deactivated'),
+            event: 'country-'.($activatedAt ? 'activated' : 'deactivated'),
             properties: ['input' => $requestData, 'output' => $output],
             logDescription: __('speca-core::activity-log.country.' . ($activatedAt ? 'activated' : 'deactivated'))
         );
@@ -207,7 +206,7 @@ class CountryController extends Controller
     /**
      * Delete the country.
      *
-     * @param string $countryId The country id.
+     * @param  string  $countryId  The country id.
      * @return SendApiResponse The api response.
      */
     public static function delete(string $countryId): SendApiResponse
@@ -244,7 +243,7 @@ class CountryController extends Controller
     /**
      * Restore the country.
      *
-     * @param string $countryId The country id.
+     * @param  string  $countryId  The country id.
      * @return SendApiResponse The api response.
      */
     public static function restore(string $countryId): SendApiResponse
@@ -279,7 +278,7 @@ class CountryController extends Controller
     /**
      * Force delete the country.
      *
-     * @param string $countryId The country id.
+     * @param  string  $countryId  The country id.
      * @return SendApiResponse The api response.
      */
     public static function forceDelete(string $countryId): SendApiResponse
@@ -316,28 +315,28 @@ class CountryController extends Controller
     /**
      * Country request.
      *
-     * @param array $requestData The request data.
+     * @param  array  $requestData  The request data.
      * @return mixed The country request.
      */
     public static function countryRequest(array $requestData = []): mixed
     {
         return Country::with('userPermissions')
-            ->when($requestData['country_id'] ?? '', fn($q) => $q->where('id', $requestData['country_id']))
-            ->when($requestData['name'] ?? '', fn($q) => $q->where('name', 'like', '%' . $requestData['name'] . '%'))
-            ->when($requestData['code'] ?? '', fn($q) => $q->where('code', 'like', '%' . $requestData['code'] . '%'))
-            ->when($requestData['iso_code'] ?? '', fn($q) => $q->where('iso_code', 'like', '%' . $requestData['iso_code'] . '%'))
-            ->when($requestData['phone_code'] ?? '', fn($q) => $q->where('iso_code', 'like', '%' . $requestData['phone_code'] . '%'))
-            ->when($requestData['flag'] ?? '', fn($q) => $q->where('flag', 'like', '%' . $requestData['flag'] . '%'))
+            ->when($requestData['country_id'] ?? '', fn ($q) => $q->where('id', $requestData['country_id']))
+            ->when($requestData['name'] ?? '', fn ($q) => $q->where('name', 'like', '%'.$requestData['name'].'%'))
+            ->when($requestData['code'] ?? '', fn ($q) => $q->where('code', 'like', '%'.$requestData['code'].'%'))
+            ->when($requestData['iso_code'] ?? '', fn ($q) => $q->where('iso_code', 'like', '%'.$requestData['iso_code'].'%'))
+            ->when($requestData['phone_code'] ?? '', fn ($q) => $q->where('iso_code', 'like', '%'.$requestData['phone_code'].'%'))
+            ->when($requestData['flag'] ?? '', fn ($q) => $q->where('flag', 'like', '%'.$requestData['flag'].'%'))
             ->when($requestData['search'] ?? '', function ($q) use ($requestData) {
                 $q->where(function ($subQuery) use ($requestData) {
-                    $subQuery->where('name', 'like', '%' . $requestData['name'] . '%')
-                        ->orWhere('code', 'like', '%' . $requestData['code'] . '%')
-                        ->orWhere('iso_code', 'like', '%' . $requestData['iso_code'] . '%')
-                        ->orWhere('phone_code', 'like', '%' . $requestData['phone_code'] . '%');
+                    $subQuery->where('name', 'like', '%'.$requestData['name'].'%')
+                        ->orWhere('code', 'like', '%'.$requestData['code'].'%')
+                        ->orWhere('iso_code', 'like', '%'.$requestData['iso_code'].'%')
+                        ->orWhere('phone_code', 'like', '%'.$requestData['phone_code'].'%');
                 });
             })
-            ->when($requestData['check'] ?? '', fn($q) => $q->whereIn('id', $requestData['check']))
-            ->when($requestData['uncheck'] ?? '', fn($q) => $q->whereNotIn('id', $requestData['uncheck']))
+            ->when($requestData['check'] ?? '', fn ($q) => $q->whereIn('id', $requestData['check']))
+            ->when($requestData['uncheck'] ?? '', fn ($q) => $q->whereNotIn('id', $requestData['uncheck']))
             ->latest();
     }
 }

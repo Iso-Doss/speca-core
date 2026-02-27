@@ -31,15 +31,13 @@ class FilterRequest extends BaseFilterRequest
             'country_id' => ['nullable', 'string', 'max:255', 'exists:countries,id'],
             'residence_country_id' => ['nullable', 'string', 'max:255', 'exists:countries,id'],
             'nationality_country_id' => ['nullable', 'string', 'max:255', 'exists:countries,id'],
-            'role_id' => ['nullable', 'string', 'max:255', 'exists:' . config('permission.table_names.roles') . ',id'],
-            'permission_id' => ['nullable', 'string', 'max:255', 'exists:' . config('permission.table_names.permissions') . ',id'],
+            'role_id' => ['nullable', 'string', 'max:255', 'exists:'.config('permission.table_names.roles').',id'],
+            'permission_id' => ['nullable', 'string', 'max:255', 'exists:'.config('permission.table_names.permissions').',id'],
         ]);
     }
 
     /**
      * Prepare the data for validation.
-     *
-     * @return void
      */
     protected function prepareForValidation(): void
     {
