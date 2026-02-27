@@ -22,8 +22,9 @@ class AuthController extends Controller
     /**
      * Sign up.
      *
-     * @param SignUpRequest $request The request.
+     * @param  SignUpRequest  $request  The request.
      * @return SendApiResponse The api response.
+     *
      * @unauthenticated This endpoint does not require authentication.
      */
     public static function signUp(SignUpRequest $request): SendApiResponse
@@ -42,8 +43,9 @@ class AuthController extends Controller
     /**
      * Sign in.
      *
-     * @param SignInRequest $request The request.
+     * @param  SignInRequest  $request  The request.
      * @return SendApiResponse The api response.
+     *
      * @unauthenticated This endpoint does not require authentication.
      */
     public static function signIn(SignInRequest $request): SendApiResponse
@@ -59,6 +61,7 @@ class AuthController extends Controller
     public static function google(): SendApiResponse
     {
         dd(Socialite::driver('google')->redirect());
+
         return new SendApiResponse;
 
         // return Socialite::driver('google')->redirect();
