@@ -178,8 +178,8 @@ class CountryController extends Controller
         }
 
         $oldStatus = (is_null($country->activated_at)) ? 'disabled' : 'enabled';
-        $activatedAt = ('enabled' == $requestData['new_status']) ? now() : null;
-        $toDo = ('enabled' == $requestData['new_status']) ? __('speca-core::messages.country.activated') : __('speca-core::messages.country.deactivated');
+        $activatedAt = ($requestData['new_status'] == 'enabled') ? now() : null;
+        $toDo = ($requestData['new_status'] == 'enabled') ? __('speca-core::messages.country.activated') : __('speca-core::messages.country.deactivated');
 
         if ($requestData['new_status'] !== $oldStatus) {
             $country->update(['activated_at' => $activatedAt]);
@@ -191,7 +191,7 @@ class CountryController extends Controller
             model: Country::getModel(),
             event: 'country-'.($activatedAt ? 'activated' : 'deactivated'),
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('speca-core::activity-log.country.' . ($activatedAt ? 'activated' : 'deactivated'))
+            logDescription: __('speca-core::activity-log.country.'.($activatedAt ? 'activated' : 'deactivated'))
         );
 
         return new SendApiResponse(

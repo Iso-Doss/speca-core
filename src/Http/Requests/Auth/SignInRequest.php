@@ -16,14 +16,12 @@ class SignInRequest extends BaseRequest
     {
         return array_merge(parent::rules(), [
             'email' => ['required', 'string', 'max:255', 'email:strict'],
-            'password' => ['required', 'string', 'max:255']
+            'password' => ['required', 'string', 'max:255'],
         ]);
     }
 
     /**
      * Prepare the data for validation.
-     *
-     * @return void
      */
     protected function prepareForValidation(): void
     {

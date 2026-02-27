@@ -203,8 +203,8 @@ class UserPermissionController extends Controller
         }
 
         $oldStatus = (is_null($userPermission->activated_at)) ? 'disabled' : 'enabled';
-        $activatedAt = ('enabled' == $requestData['new_status']) ? now() : null;
-        $toDo = ('enabled' == $requestData['new_status']) ? __('speca-core::messages.user-permission.activated') : __('speca-core::messages.user-permission.deactivated');
+        $activatedAt = ($requestData['new_status'] == 'enabled') ? now() : null;
+        $toDo = ($requestData['new_status'] == 'enabled') ? __('speca-core::messages.user-permission.activated') : __('speca-core::messages.user-permission.deactivated');
 
         if ($requestData['new_status'] !== $oldStatus) {
             $userPermission->update(['activated_at' => $activatedAt]);
@@ -216,7 +216,7 @@ class UserPermissionController extends Controller
             model: UserPermission::getModel(),
             event: 'user-permission-'.($activatedAt ? 'activated' : 'deactivated'),
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('speca-core::activity-log.user-permission.' . ($activatedAt ? 'activated' : 'deactivated'), ['user_permission' => $userPermission->label])
+            logDescription: __('speca-core::activity-log.user-permission.'.($activatedAt ? 'activated' : 'deactivated'), ['user_permission' => $userPermission->label])
         );
 
         return new SendApiResponse(

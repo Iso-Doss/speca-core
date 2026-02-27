@@ -12,8 +12,8 @@ use Speca\SpecaCore\Http\Controllers\Api\V1\UserPermissionController;
 use Speca\SpecaCore\Http\Controllers\Api\V1\UserProfileController;
 use Speca\SpecaCore\Http\Controllers\Api\V1\UserRoleController;
 
-Route::prefix(config('speca-core.route.api.prefix', 'api/v1'))->name(config('speca-core.name', 'speca-core') . '.')->group(function () {
-    Route::controller(AuthController::class)->prefix("/auth")->name('auth.')->group(function () {
+Route::prefix(config('speca-core.route.api.prefix', 'api/v1'))->name(config('speca-core.name', 'speca-core').'.')->group(function () {
+    Route::controller(AuthController::class)->prefix('/auth')->name('auth.')->group(function () {
         Route::post('sign-up', [AuthController::class, 'signUp'])->name('sign-up');
         Route::post('sign-in', [AuthController::class, 'signIn'])->name('sign-in');
         Route::post('sign-out', [AuthController::class, 'signOut'])->name('sign-out');
@@ -23,13 +23,13 @@ Route::prefix(config('speca-core.route.api.prefix', 'api/v1'))->name(config('spe
             Route::get('/callback', [AuthController::class, 'googleCallback'])->name('google-callback');
         });
 
-        Route::controller(AuthController::class)->prefix("/password")->name('password.')->group(function () {
+        Route::controller(AuthController::class)->prefix('/password')->name('password.')->group(function () {
             Route::post('forgot', [AuthController::class, 'forgotPassword'])->name('forgot');
             Route::post('reset', [AuthController::class, 'resetPassword'])->name('reset');
         });
     });
 
-    //Route::middleware('oauth')->group(function () {
+    // Route::middleware('oauth')->group(function () {
     // User permission category endpoints.
     Route::controller(UserPermissionCategoryController::class)->prefix('/user-category-permission')->name('user-category-permission.')->group(function () {
         Route::get('', [UserPermissionCategoryController::class, 'index'])->name('index');
