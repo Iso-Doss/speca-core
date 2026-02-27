@@ -2,7 +2,9 @@
 
 namespace Speca\SpecaCore\Http\Controllers\Api\V1;
 
+use Laravel\Socialite\Facades\Socialite;
 use Speca\SpecaCore\Http\Controllers\Controller;
+use Speca\SpecaCore\Http\Requests\Auth\SignInRequest;
 use Speca\SpecaCore\Http\Requests\Auth\SignUpRequest;
 use Speca\SpecaCore\Http\Resources\SendApiResponse;
 use Speca\SpecaCore\Models\User;
@@ -20,8 +22,9 @@ class AuthController extends Controller
     /**
      * Sign up.
      *
-     * @param  SignUpRequest  $request  The request.
+     * @param SignUpRequest $request The request.
      * @return SendApiResponse The api response.
+     * @unauthenticated This endpoint does not require authentication.
      */
     public static function signUp(SignUpRequest $request): SendApiResponse
     {
@@ -36,7 +39,14 @@ class AuthController extends Controller
         );
     }
 
-    public static function signIn(): SendApiResponse
+    /**
+     * Sign in.
+     *
+     * @param SignInRequest $request The request.
+     * @return SendApiResponse The api response.
+     * @unauthenticated This endpoint does not require authentication.
+     */
+    public static function signIn(SignInRequest $request): SendApiResponse
     {
         return new SendApiResponse;
     }
@@ -48,6 +58,7 @@ class AuthController extends Controller
 
     public static function google(): SendApiResponse
     {
+        dd(Socialite::driver('google')->redirect());
         return new SendApiResponse;
 
         // return Socialite::driver('google')->redirect();
