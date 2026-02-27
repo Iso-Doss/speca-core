@@ -2,7 +2,7 @@
 
 // Config for speca/speca-core.
 return [
-    'name' => 'paydunya-core',
+    'name' => 'speca-core',
 
     'route' => [
         'api' => [

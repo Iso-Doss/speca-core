@@ -38,12 +38,12 @@ class ActivityLogController extends Controller
             model: Activity::getModel(),
             event: 'activity-list',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.activities-log.list')
+            logDescription: __('speca-core::activity-log.activities-log.list')
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.activities-log.list'),
+            message: __('speca-core::messages.activities-log.list'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -71,12 +71,12 @@ class ActivityLogController extends Controller
             model: Activity::getModel(),
             event: 'activity-exported',
             properties: ['input' => $requestData, 'output' => $userActivities],
-            logDescription: __('paydunya-core::activity-log.activities-log.exported')
+            logDescription: __('speca-core::activity-log.activities-log.exported')
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.activities-log.exported'),
+            message: __('speca-core::messages.activities-log.exported'),
             input: $requestData,
             data: $userActivities,
             statusCode: 200,
@@ -117,7 +117,7 @@ class ActivityLogController extends Controller
             })
             ->when($requestData['check'] ?? '', fn($q) => $q->whereIn('id', $requestData['check']))
             ->when($requestData['uncheck'] ?? '', fn($q) => $q->whereNotIn('id', $requestData['uncheck']))
-            ->where('log_name', '=', 'paydunya-core')
+            ->where('log_name', '=', 'speca-core')
             ->latest();
     }
 }

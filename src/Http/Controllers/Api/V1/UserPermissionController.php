@@ -2,8 +2,9 @@
 
 namespace Speca\SpecaCore\Http\Controllers\Api\V1;
 
-
 use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Exception;
+use PhpOffice\PhpSpreadsheet\Writer\Exception as WriterException;
 use Speca\SpecaCore\Enums\GroupActionType;
 use Speca\SpecaCore\Export\ExportModel;
 use Speca\SpecaCore\Http\Controllers\Controller;
@@ -15,9 +16,6 @@ use Speca\SpecaCore\Http\Requests\UserPermission\GroupActionRequest;
 use Speca\SpecaCore\Http\Resources\SendApiResponse;
 use Speca\SpecaCore\Models\UserPermission;
 use Speca\SpecaCore\Models\UserPermissionCategory;
-use PhpOffice\PhpSpreadsheet\Exception;
-use PhpOffice\PhpSpreadsheet\Writer\Exception as WriterException;
-
 
 class UserPermissionController extends Controller
 {
@@ -61,12 +59,12 @@ class UserPermissionController extends Controller
             model: UserPermission::getModel(),
             event: 'user-permission-list',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-permission.list')
+            logDescription: __('speca-core::activity-log.user-permission.list')
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user-permission.list'),
+            message: __('speca-core::messages.user-permission.list'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -95,12 +93,12 @@ class UserPermissionController extends Controller
             model: UserPermission::getModel(),
             event: 'user-permission-show',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-permission.show', ['user_permission' => $userPermission->label])
+            logDescription: __('speca-core::activity-log.user-permission.show', ['user_permission' => $userPermission->label])
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user-permission.show'),
+            message: __('speca-core::messages.user-permission.show'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -132,12 +130,12 @@ class UserPermissionController extends Controller
             model: UserPermission::getModel(),
             event: 'user-permission-created',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-permission.created', ['user_permission' => $userPermission->label])
+            logDescription: __('speca-core::activity-log.user-permission.created', ['user_permission' => $userPermission->label])
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user-permission.created'),
+            message: __('speca-core::messages.user-permission.created'),
             input: $requestData,
             data: $output,
             statusCode: 201,
@@ -176,12 +174,12 @@ class UserPermissionController extends Controller
             model: UserPermission::getModel(),
             event: 'user-permission-updated',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-permission.updated', ['user_permission' => $userPermission->label])
+            logDescription: __('speca-core::activity-log.user-permission.updated', ['user_permission' => $userPermission->label])
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user-permission.updated'),
+            message: __('speca-core::messages.user-permission.updated'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -206,7 +204,7 @@ class UserPermissionController extends Controller
 
         $oldStatus = (is_null($userPermission->activated_at)) ? 'disabled' : 'enabled';
         $activatedAt = ('enabled' == $requestData['new_status']) ? now() : null;
-        $toDo = ('enabled' == $requestData['new_status']) ? __('paydunya-core::messages.user-permission.activated') : __('paydunya-core::messages.user-permission.deactivated');
+        $toDo = ('enabled' == $requestData['new_status']) ? __('speca-core::messages.user-permission.activated') : __('speca-core::messages.user-permission.deactivated');
 
         if ($requestData['new_status'] !== $oldStatus) {
             $userPermission->update(['activated_at' => $activatedAt]);
@@ -218,7 +216,7 @@ class UserPermissionController extends Controller
             model: UserPermission::getModel(),
             event: 'user-permission-' . ($activatedAt ? 'activated' : 'deactivated'),
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-permission.' . ($activatedAt ? 'activated' : 'deactivated'), ['user_permission' => $userPermission->label])
+            logDescription: __('speca-core::activity-log.user-permission.' . ($activatedAt ? 'activated' : 'deactivated'), ['user_permission' => $userPermission->label])
         );
 
         return new SendApiResponse(
@@ -257,12 +255,12 @@ class UserPermissionController extends Controller
                 model: UserPermission::getModel(),
                 event: 'user-permission-group-action-' . strtolower($requestData['action']),
                 properties: ['input' => $requestData, 'output' => $userPermissions->get()->toArray()],
-                logDescription: __('paydunya-core::activity-log.user-permission.group-action', ['action' => GroupActionType::from($requestData['action'])->label()])
+                logDescription: __('speca-core::activity-log.user-permission.group-action', ['action' => GroupActionType::from($requestData['action'])->label()])
             );
 
             return new SendApiResponse(
                 success: true,
-                message: __('paydunya-core::messages.user-permission.group-action', ['action' => GroupActionType::from($requestData['action'])->label()]),
+                message: __('speca-core::messages.user-permission.group-action', ['action' => GroupActionType::from($requestData['action'])->label()]),
                 input: $requestData,
                 data: $userPermissions->get()->toArray(),
                 statusCode: 200,
@@ -272,12 +270,12 @@ class UserPermissionController extends Controller
                 model: UserPermission::getModel(),
                 event: 'user-permission-group-action-' . strtolower($requestData['action']) . '-attempt',
                 properties: ['input' => $requestData, 'output' => $userPermissions->get()->toArray()],
-                logDescription: __('paydunya-core::activity-log.user-permission.group-action-attempt', ['action' => GroupActionType::from($requestData['action'])->label()])
+                logDescription: __('speca-core::activity-log.user-permission.group-action-attempt', ['action' => GroupActionType::from($requestData['action'])->label()])
             );
 
             return new SendApiResponse(
                 success: false,
-                message: __('paydunya-core::messages.user-permission.group-action-attempt', ['action' => GroupActionType::from($requestData['action'])->label()]),
+                message: __('speca-core::messages.user-permission.group-action-attempt', ['action' => GroupActionType::from($requestData['action'])->label()]),
                 input: $requestData,
                 data: $userPermissions->get()->toArray(),
                 statusCode: 200,
@@ -307,12 +305,12 @@ class UserPermissionController extends Controller
             model: UserPermissionCategory::getModel(),
             event: 'user-permission-exported',
             properties: ['input' => $requestData, 'output' => $userPermissions],
-            logDescription: __('paydunya-core::activity-log.user-permission.exported')
+            logDescription: __('speca-core::activity-log.user-permission.exported')
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user-permission.exported'),
+            message: __('speca-core::messages.user-permission.exported'),
             input: $requestData,
             data: $userPermissions,
             statusCode: 200,
@@ -349,12 +347,12 @@ class UserPermissionController extends Controller
             model: UserPermission::getModel(),
             event: 'user-permission-archived',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-permission.archived', ['user_permission' => $userPermission->label])
+            logDescription: __('speca-core::activity-log.user-permission.archived', ['user_permission' => $userPermission->label])
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user-permission.archived'),
+            message: __('speca-core::messages.user-permission.archived'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -384,13 +382,13 @@ class UserPermissionController extends Controller
             model: UserPermission::getModel(),
             event: 'user-permission-restored',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-permission.restored', ['user_permission' => $userPermission->label])
+            logDescription: __('speca-core::activity-log.user-permission.restored', ['user_permission' => $userPermission->label])
         );
 
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user-permission.restored'),
+            message: __('speca-core::messages.user-permission.restored'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -427,12 +425,12 @@ class UserPermissionController extends Controller
             model: UserPermission::getModel(),
             event: 'user-permission-deleted',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-permission.deleted', ['user_permission' => $userPermission->label])
+            logDescription: __('speca-core::activity-log.user-permission.deleted', ['user_permission' => $userPermission->label])
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user-permission.deleted'),
+            message: __('speca-core::messages.user-permission.deleted'),
             input: $requestData,
             data: $output,
             statusCode: 200,

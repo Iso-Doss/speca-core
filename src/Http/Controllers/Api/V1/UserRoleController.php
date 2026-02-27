@@ -59,12 +59,12 @@ class UserRoleController extends Controller
             model: UserRole::getModel(),
             event: 'user-role-list',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-role.list')
+            logDescription: __('speca-core::activity-log.user-role.list')
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user-role.list'),
+            message: __('speca-core::messages.user-role.list'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -92,12 +92,12 @@ class UserRoleController extends Controller
             model: UserRole::getModel(),
             event: 'user-role-show',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-role.show', ['user_role' => $userRole->label])
+            logDescription: __('speca-core::activity-log.user-role.show', ['user_role' => $userRole->label])
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user-role.show'),
+            message: __('speca-core::messages.user-role.show'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -125,12 +125,12 @@ class UserRoleController extends Controller
             model: UserRole::getModel(),
             event: 'user-role-created',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-role.created', ['user_role' => $userRole->label])
+            logDescription: __('speca-core::activity-log.user-role.created', ['user_role' => $userRole->label])
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user-role.created'),
+            message: __('speca-core::messages.user-role.created'),
             input: $requestData,
             data: $output,
             statusCode: 201,
@@ -165,13 +165,13 @@ class UserRoleController extends Controller
             model: UserRole::getModel(),
             event: 'user-role-updated',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-role.updated', ['user_role' => $userRole->label])
+            logDescription: __('speca-core::activity-log.user-role.updated', ['user_role' => $userRole->label])
         );
 
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user-role.updated'),
+            message: __('speca-core::messages.user-role.updated'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -196,7 +196,7 @@ class UserRoleController extends Controller
 
         $oldStatus = (is_null($userRole->activated_at)) ? 'disabled' : 'enabled';
         $activatedAt = ('enabled' == $requestData['new_status']) ? now() : null;
-        $toDo = ('enabled' == $requestData['new_status']) ? __('paydunya-core::messages.user-role.activated') : __('paydunya-core::messages.user-role.deactivated');
+        $toDo = ('enabled' == $requestData['new_status']) ? __('speca-core::messages.user-role.activated') : __('speca-core::messages.user-role.deactivated');
 
         if ($requestData['new_status'] !== $oldStatus) {
             $userRole->update(['activated_at' => $activatedAt]);
@@ -208,7 +208,7 @@ class UserRoleController extends Controller
             model: UserRole::getModel(),
             event: 'user-role-' . ($activatedAt ? 'activated' : 'deactivated'),
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-role.' . ($activatedAt ? 'activated' : 'deactivated'), ['user_role' => $userRole->label])
+            logDescription: __('speca-core::activity-log.user-role.' . ($activatedAt ? 'activated' : 'deactivated'), ['user_role' => $userRole->label])
         );
 
         return new SendApiResponse(
@@ -246,12 +246,12 @@ class UserRoleController extends Controller
                 model: UserRole::getModel(),
                 event: 'user-group-action-' . strtolower($requestData['action']),
                 properties: ['input' => $requestData, 'output' => $userRoles->get()->toArray()],
-                logDescription: __('paydunya-core::activity-log.user-role.group-action', ['action' => GroupActionType::from($requestData['action'])->label()])
+                logDescription: __('speca-core::activity-log.user-role.group-action', ['action' => GroupActionType::from($requestData['action'])->label()])
             );
 
             return new SendApiResponse(
                 success: true,
-                message: __('paydunya-core::messages.user-role.group-action', ['action' => GroupActionType::from($requestData['action'])->label()]),
+                message: __('speca-core::messages.user-role.group-action', ['action' => GroupActionType::from($requestData['action'])->label()]),
                 input: $requestData,
                 data: $userRoles->get()->toArray(),
                 statusCode: 200,
@@ -261,12 +261,12 @@ class UserRoleController extends Controller
                 model: UserRole::getModel(),
                 event: 'user-group-action-' . strtolower($requestData['action']) . '-attempt',
                 properties: ['input' => $requestData, 'output' => $userRoles->get()->toArray()],
-                logDescription: __('paydunya-core::activity-log.user-role.group-action-attempt', ['action' => GroupActionType::from($requestData['action'])->label()])
+                logDescription: __('speca-core::activity-log.user-role.group-action-attempt', ['action' => GroupActionType::from($requestData['action'])->label()])
             );
 
             return new SendApiResponse(
                 success: false,
-                message: __('paydunya-core::messages.user-role.group-action-attempt', ['action' => GroupActionType::from($requestData['action'])->label()]),
+                message: __('speca-core::messages.user-role.group-action-attempt', ['action' => GroupActionType::from($requestData['action'])->label()]),
                 input: $requestData,
                 data: $userRoles->get()->toArray(),
                 statusCode: 200,
@@ -295,12 +295,12 @@ class UserRoleController extends Controller
             model: UserRole::getModel(),
             event: 'user-role-exported',
             properties: ['input' => $requestData, 'output' => $userRoles],
-            logDescription: __('paydunya-core::activity-log.user-role.exported')
+            logDescription: __('speca-core::activity-log.user-role.exported')
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user-role.exported'),
+            message: __('speca-core::messages.user-role.exported'),
             input: $requestData,
             data: $userRoles,
             statusCode: 200,
@@ -337,12 +337,12 @@ class UserRoleController extends Controller
             model: UserRole::getModel(),
             event: 'user-role-archived',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-role.archived', ['user_role' => $userRole->label])
+            logDescription: __('speca-core::activity-log.user-role.archived', ['user_role' => $userRole->label])
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user-role.archived'),
+            message: __('speca-core::messages.user-role.archived'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -372,12 +372,12 @@ class UserRoleController extends Controller
             model: UserRole::getModel(),
             event: 'user-role-restored',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-role.restored', ['user_role' => $userRole->label])
+            logDescription: __('speca-core::activity-log.user-role.restored', ['user_role' => $userRole->label])
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user-role.restored'),
+            message: __('speca-core::messages.user-role.restored'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -414,12 +414,12 @@ class UserRoleController extends Controller
             model: UserRole::getModel(),
             event: 'user-role-deleted',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-role.deleted', ['user_role' => $userRole->label])
+            logDescription: __('speca-core::activity-log.user-role.deleted', ['user_role' => $userRole->label])
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user-role.deleted'),
+            message: __('speca-core::messages.user-role.deleted'),
             input: $requestData,
             data: $output,
             statusCode: 200,

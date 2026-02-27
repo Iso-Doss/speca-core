@@ -15,7 +15,7 @@ if (!function_exists('whoCanAccessDeveloperTools')) {
      */
     function whoCanAccessDeveloperTools(User $user): bool
     {
-        return !is_null($user->email) && in_array($user->email, explode(',', config('paydunya-core.who-can-access-developers-tools', '')));
+        return !is_null($user->email) && in_array($user->email, explode(',', config('speca-core.who-can-access-developers-tools', '')));
     }
 }
 
@@ -31,7 +31,7 @@ if (!function_exists('addActivityLog')) {
      * @param string $logName The log name.
      * @return void
      */
-    function addActivityLog(?Model $model, string $event, Model|int|string|null $user = null, array $properties = [], string $logDescription = '', string $logName = 'paydunya-core'): void
+    function addActivityLog(?Model $model, string $event, Model|int|string|null $user = null, array $properties = [], string $logDescription = '', string $logName = 'speca-core'): void
     {
         $activity = activity()
             ->event($event)
@@ -91,12 +91,12 @@ if (!function_exists('modelExist')) {
                 model: $model,
                 event: $modelSlug . '-' . $eventType . '-attempt',
                 properties: ['input' => $requestData, 'output' => []],
-                logDescription: __('paydunya-core::activity-log.' . $modelSlug . '.' . $eventType . '-attempt')
+                logDescription: __('speca-core::activity-log.' . $modelSlug . '.' . $eventType . '-attempt')
             );
 
             return new SendApiResponse(
                 success: false,
-                message: __('paydunya-core::messages.' . $modelSlug . '.not-found'),
+                message: __('speca-core::messages.' . $modelSlug . '.not-found'),
                 input: $requestData,
                 statusCode: 404,
             );
@@ -126,12 +126,12 @@ if (!function_exists('passwordConfirmation')) {
                 model: $model,
                 event: $event,
                 properties: ['input' => $requestData, 'output' => []],
-                logDescription: __('paydunya-core::activity-log.user.unauthorized')
+                logDescription: __('speca-core::activity-log.user.unauthorized')
             );
 
             return new SendApiResponse(
                 success: false,
-                message: __('paydunya-core::messages.user.unauthorized'),
+                message: __('speca-core::messages.user.unauthorized'),
                 input: $requestData,
                 statusCode: 403,
             );

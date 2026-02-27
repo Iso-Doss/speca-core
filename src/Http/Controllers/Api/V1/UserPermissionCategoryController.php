@@ -60,12 +60,12 @@ class UserPermissionCategoryController extends Controller
             model: UserPermissionCategory::getModel(),
             event: 'user-permission-category-list',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-permission-category.list')
+            logDescription: __('speca-core::activity-log.user-permission-category.list')
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user-permission-category.list'),
+            message: __('speca-core::messages.user-permission-category.list'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -93,12 +93,12 @@ class UserPermissionCategoryController extends Controller
             model: UserPermissionCategory::getModel(),
             event: 'user-permission-category-show',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-permission-category.show', ['user_permission_category' => $userPermissionCategory->label])
+            logDescription: __('speca-core::activity-log.user-permission-category.show', ['user_permission_category' => $userPermissionCategory->label])
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user-permission-category.show'),
+            message: __('speca-core::messages.user-permission-category.show'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -126,12 +126,12 @@ class UserPermissionCategoryController extends Controller
             model: UserPermissionCategory::getModel(),
             event: 'user-permission-category-created',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-permission-category.created', ['user_permission_category' => $userPermissionCategory->label])
+            logDescription: __('speca-core::activity-log.user-permission-category.created', ['user_permission_category' => $userPermissionCategory->label])
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user-permission-category.created'),
+            message: __('speca-core::messages.user-permission-category.created'),
             input: $requestData,
             data: $output,
             statusCode: 201,
@@ -165,12 +165,12 @@ class UserPermissionCategoryController extends Controller
             model: UserPermissionCategory::getModel(),
             event: 'user-permission-category-updated',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-permission-category.updated', ['user_permission_category' => $userPermissionCategory->label])
+            logDescription: __('speca-core::activity-log.user-permission-category.updated', ['user_permission_category' => $userPermissionCategory->label])
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user-permission-category.updated'),
+            message: __('speca-core::messages.user-permission-category.updated'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -195,7 +195,7 @@ class UserPermissionCategoryController extends Controller
 
         $oldStatus = (is_null($userPermissionCategory->activated_at)) ? 'disabled' : 'enabled';
         $activatedAt = ('enabled' == $requestData['new_status']) ? now() : null;
-        $toDo = ('enabled' == $requestData['new_status']) ? __('paydunya-core::messages.user-permission-category.activated') : __('paydunya-core::messages.user-permission-category.deactivated');
+        $toDo = ('enabled' == $requestData['new_status']) ? __('speca-core::messages.user-permission-category.activated') : __('speca-core::messages.user-permission-category.deactivated');
 
         if ($requestData['new_status'] !== $oldStatus) {
             $userPermissionCategory->update(['activated_at' => $activatedAt]);
@@ -207,7 +207,7 @@ class UserPermissionCategoryController extends Controller
             model: UserPermissionCategory::getModel(),
             event: 'user-permission-category-' . ($activatedAt ? 'activated' : 'deactivated'),
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-permission-category.' . ($activatedAt ? 'activated' : 'deactivated'), ['user_permission_category' => $userPermissionCategory->label])
+            logDescription: __('speca-core::activity-log.user-permission-category.' . ($activatedAt ? 'activated' : 'deactivated'), ['user_permission_category' => $userPermissionCategory->label])
         );
 
         return new SendApiResponse(
@@ -245,12 +245,12 @@ class UserPermissionCategoryController extends Controller
                 model: UserPermissionCategory::getModel(),
                 event: 'user-permission-category-group-action-' . strtolower($requestData['action']),
                 properties: ['input' => $requestData, 'output' => $userPermissionCategories->get()->toArray()],
-                logDescription: __('paydunya-core::activity-log.user-permission-category.group-action', ['action' => GroupActionType::from($requestData['action'])->label()])
+                logDescription: __('speca-core::activity-log.user-permission-category.group-action', ['action' => GroupActionType::from($requestData['action'])->label()])
             );
 
             return new SendApiResponse(
                 success: true,
-                message: __('paydunya-core::messages.user-permission-category.group-action', ['action' => GroupActionType::from($requestData['action'])->label()]),
+                message: __('speca-core::messages.user-permission-category.group-action', ['action' => GroupActionType::from($requestData['action'])->label()]),
                 input: $requestData,
                 data: $userPermissionCategories->get()->toArray(),
                 statusCode: 200,
@@ -260,12 +260,12 @@ class UserPermissionCategoryController extends Controller
                 model: UserPermissionCategory::getModel(),
                 event: 'user-permission-category-group-action-' . strtolower($requestData['action']) . '-attempt',
                 properties: ['input' => $requestData, 'output' => $userPermissionCategories->get()->toArray()],
-                logDescription: __('paydunya-core::activity-log.user-permission-category.group-action-attempt', ['action' => GroupActionType::from($requestData['action'])->label()])
+                logDescription: __('speca-core::activity-log.user-permission-category.group-action-attempt', ['action' => GroupActionType::from($requestData['action'])->label()])
             );
 
             return new SendApiResponse(
                 success: false,
-                message: __('paydunya-core::messages.user-permission-category.group-action-attempt', ['action' => GroupActionType::from($requestData['action'])->label()]),
+                message: __('speca-core::messages.user-permission-category.group-action-attempt', ['action' => GroupActionType::from($requestData['action'])->label()]),
                 input: $requestData,
                 data: $userPermissionCategories->get()->toArray(),
                 statusCode: 200,
@@ -295,12 +295,12 @@ class UserPermissionCategoryController extends Controller
             model: UserPermissionCategory::getModel(),
             event: 'user-permission-category-exported',
             properties: ['input' => $requestData, 'output' => $userPermissionCategories],
-            logDescription: __('paydunya-core::activity-log.user-permission-category.exported')
+            logDescription: __('speca-core::activity-log.user-permission-category.exported')
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user-permission-category.exported'),
+            message: __('speca-core::messages.user-permission-category.exported'),
             input: $requestData,
             data: $userPermissionCategories,
             statusCode: 200,
@@ -337,12 +337,12 @@ class UserPermissionCategoryController extends Controller
             model: UserPermissionCategory::getModel(),
             event: 'user-permission-category-archived',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-permission-category.archived', ['user_permission_category' => $userPermissionCategory->label])
+            logDescription: __('speca-core::activity-log.user-permission-category.archived', ['user_permission_category' => $userPermissionCategory->label])
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user-permission-category.archived'),
+            message: __('speca-core::messages.user-permission-category.archived'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -372,12 +372,12 @@ class UserPermissionCategoryController extends Controller
             model: UserPermissionCategory::getModel(),
             event: 'user-permission-category-restored',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-permission-category.restored', ['user_permission_category' => $userPermissionCategory->label])
+            logDescription: __('speca-core::activity-log.user-permission-category.restored', ['user_permission_category' => $userPermissionCategory->label])
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user-permission-category.restored'),
+            message: __('speca-core::messages.user-permission-category.restored'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -415,12 +415,12 @@ class UserPermissionCategoryController extends Controller
             model: UserPermissionCategory::getModel(),
             event: 'user-permission-category-deleted',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user-permission-category.deleted', ['user_permission_category' => $userPermissionCategory->label])
+            logDescription: __('speca-core::activity-log.user-permission-category.deleted', ['user_permission_category' => $userPermissionCategory->label])
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user-permission-category.deleted'),
+            message: __('speca-core::messages.user-permission-category.deleted'),
             input: $requestData,
             data: $output,
             statusCode: 200,

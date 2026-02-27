@@ -60,12 +60,12 @@ class UserController extends Controller
             model: User::getModel(),
             event: 'user-list',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user.list')
+            logDescription: __('speca-core::activity-log.user.list')
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user.list'),
+            message: __('speca-core::messages.user.list'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -93,12 +93,12 @@ class UserController extends Controller
             model: User::getModel(),
             event: 'user-show',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user.show', ['user' => $user->full_name])
+            logDescription: __('speca-core::activity-log.user.show', ['user' => $user->full_name])
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user.show'),
+            message: __('speca-core::messages.user.show'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -124,19 +124,19 @@ class UserController extends Controller
 
         $frontendUrl = config('paydunya.front_end_url') ;
         $mailData = array_merge($user->toArray(), ['link' => $frontendUrl . '/user/' . $user->id,]);
-        UserConfirmationMail::dispatch($user->email, __('Confirmation d\'inscription'), 'paydunya-core::email.user-confirmation', $mailData);
+        UserConfirmationMail::dispatch($user->email, __('Confirmation d\'inscription'), 'speca-core::email.user-confirmation', $mailData);
 
 
         addActivityLog(
             model: User::getModel(),
             event: 'user-created',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user.created', ['email' => $user->email, 'role' => $user->roles->first()?->label])
+            logDescription: __('speca-core::activity-log.user.created', ['email' => $user->email, 'role' => $user->roles->first()?->label])
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user.created'),
+            message: __('speca-core::messages.user.created'),
             input: $requestData,
             data: $output,
             statusCode: 201,
@@ -160,12 +160,12 @@ class UserController extends Controller
                 model: User::getModel(),
                 event: 'user-resend-email-confirmation-attempt',
                 properties: ['input' => $requestData, 'output' => []],
-                logDescription: __('paydunya-core::activity-log.user.resend-email-confirmation-attempt')
+                logDescription: __('speca-core::activity-log.user.resend-email-confirmation-attempt')
             );
 
             return new SendApiResponse(
                 success: false,
-                message: __('paydunya-core::messages.user.not-found'),
+                message: __('speca-core::messages.user.not-found'),
                 input: $requestData,
                 statusCode: 404,
             );
@@ -174,7 +174,7 @@ class UserController extends Controller
 
         $frontendUrl = config('paydunya.front_end_url') ;
         $mailData = array_merge($user->toArray(), ['link' => $frontendUrl . '/user/' . $user->id,]);
-        UserConfirmationMail::dispatch($user->email, __('paydunya-core::messages.user.send-confirmation-email'), 'paydunya-core::email.user-confirmation', $mailData);
+        UserConfirmationMail::dispatch($user->email, __('speca-core::messages.user.send-confirmation-email'), 'speca-core::email.user-confirmation', $mailData);
 
         $output = getOutput($user);
 
@@ -182,12 +182,12 @@ class UserController extends Controller
             model: User::getModel(),
             event: 'user-resend-email-confirmation',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user.resend-email-confirmation', ['user' => $user->full_name])
+            logDescription: __('speca-core::activity-log.user.resend-email-confirmation', ['user' => $user->full_name])
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user.resend-email-confirmation'),
+            message: __('speca-core::messages.user.resend-email-confirmation'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -222,12 +222,12 @@ class UserController extends Controller
             model: User::getModel(),
             event: 'user-updated',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user.updated', ['user' => $user->full_name])
+            logDescription: __('speca-core::activity-log.user.updated', ['user' => $user->full_name])
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user.updated'),
+            message: __('speca-core::messages.user.updated'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -252,7 +252,7 @@ class UserController extends Controller
 
         $oldStatus = (is_null($user->activated_at)) ? 'disabled' : 'enabled';
         $activatedAt = ('enabled' == $requestData['new_status']) ? now() : null;
-        $toDo = ('enabled' == $requestData['new_status']) ? __('paydunya-core::messages.user.activated') : __('paydunya-core::messages.user.deactivated');
+        $toDo = ('enabled' == $requestData['new_status']) ? __('speca-core::messages.user.activated') : __('speca-core::messages.user.deactivated');
 
         if ($requestData['new_status'] !== $oldStatus) {
             $user->update(['activated_at' => $activatedAt]);
@@ -264,7 +264,7 @@ class UserController extends Controller
             model: User::getModel(),
             event: 'user-' . ($activatedAt ? 'activated' : 'deactivated'),
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user.' . ($activatedAt ? 'activated' : 'deactivated'), ['email' => $user->email, 'role' => $user->roles->first()?->label])
+            logDescription: __('speca-core::activity-log.user.' . ($activatedAt ? 'activated' : 'deactivated'), ['email' => $user->email, 'role' => $user->roles->first()?->label])
         );
 
         return new SendApiResponse(
@@ -302,12 +302,12 @@ class UserController extends Controller
                 model: User::getModel(),
                 event: 'user-group-action-' . strtolower($requestData['action']),
                 properties: ['input' => $requestData, 'output' => $users->get()->toArray()],
-                logDescription: __('paydunya-core::activity-log.user.group-action', ['action' => GroupActionType::from($requestData['action'])->label()])
+                logDescription: __('speca-core::activity-log.user.group-action', ['action' => GroupActionType::from($requestData['action'])->label()])
             );
 
             return new SendApiResponse(
                 success: true,
-                message: __('paydunya-core::messages.user.group-action', ['action' => GroupActionType::from($requestData['action'])->label()]),
+                message: __('speca-core::messages.user.group-action', ['action' => GroupActionType::from($requestData['action'])->label()]),
                 input: $requestData,
                 data: $users->get()->toArray(),
                 statusCode: 200,
@@ -317,12 +317,12 @@ class UserController extends Controller
                 model: User::getModel(),
                 event: 'user-group-action-' . strtolower($requestData['action']) . '-attempt',
                 properties: ['input' => $requestData, 'output' => $users->get()->toArray()],
-                logDescription: __('paydunya-core::activity-log.user.group-action-attempt', ['action' => GroupActionType::from($requestData['action'])->label()])
+                logDescription: __('speca-core::activity-log.user.group-action-attempt', ['action' => GroupActionType::from($requestData['action'])->label()])
             );
 
             return new SendApiResponse(
                 success: false,
-                message: __('paydunya-core::messages.user.group-action-attempt', ['action' => GroupActionType::from($requestData['action'])->label()]),
+                message: __('speca-core::messages.user.group-action-attempt', ['action' => GroupActionType::from($requestData['action'])->label()]),
                 input: $requestData,
                 data: $users->get()->toArray(),
                 statusCode: 200,
@@ -351,12 +351,12 @@ class UserController extends Controller
             model: User::getModel(),
             event: 'user-exported',
             properties: ['input' => $requestData, 'output' => $users],
-            logDescription: __('paydunya-core::activity-log.user.exported')
+            logDescription: __('speca-core::activity-log.user.exported')
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user.exported'),
+            message: __('speca-core::messages.user.exported'),
             input: $requestData,
             data: $users,
             statusCode: 200,
@@ -393,12 +393,12 @@ class UserController extends Controller
             model: User::getModel(),
             event: 'user-archived',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user.archived', ['user' => $user->full_name])
+            logDescription: __('speca-core::activity-log.user.archived', ['user' => $user->full_name])
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user.archived'),
+            message: __('speca-core::messages.user.archived'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -428,12 +428,12 @@ class UserController extends Controller
             model: User::getModel(),
             event: 'user-restored',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user.restored', ['email' => $user->email])
+            logDescription: __('speca-core::activity-log.user.restored', ['email' => $user->email])
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user.restored'),
+            message: __('speca-core::messages.user.restored'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -470,12 +470,12 @@ class UserController extends Controller
             model: User::getModel(),
             event: 'user-deleted',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.user.deleted', ['user' => $user->full_name])
+            logDescription: __('speca-core::activity-log.user.deleted', ['user' => $user->full_name])
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.user.deleted'),
+            message: __('speca-core::messages.user.deleted'),
             input: $requestData,
             data: $output,
             statusCode: 200,

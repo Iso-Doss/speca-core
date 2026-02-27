@@ -51,12 +51,12 @@ class CountryController extends Controller
             model: Country::getModel(),
             event: 'country-list',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.country.list')
+            logDescription: __('speca-core::activity-log.country.list')
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.country.list'),
+            message: __('speca-core::messages.country.list'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -81,12 +81,12 @@ class CountryController extends Controller
             model: Country::getModel(),
             event: 'country-show',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.country.show')
+            logDescription: __('speca-core::activity-log.country.show')
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.country.show'),
+            message: __('speca-core::messages.country.show'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -111,12 +111,12 @@ class CountryController extends Controller
             model: Country::getModel(),
             event: 'country-created',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.country.created')
+            logDescription: __('speca-core::activity-log.country.created')
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.country.created'),
+            message: __('speca-core::messages.country.created'),
             input: $requestData,
             data: $output,
             statusCode: 201,
@@ -150,12 +150,12 @@ class CountryController extends Controller
             model: Country::getModel(),
             event: 'country-updated',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.country.updated')
+            logDescription: __('speca-core::activity-log.country.updated')
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.country.updated'),
+            message: __('speca-core::messages.country.updated'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -180,7 +180,7 @@ class CountryController extends Controller
 
         $oldStatus = (is_null($country->activated_at)) ? 'disabled' : 'enabled';
         $activatedAt = ('enabled' == $requestData['new_status']) ? now() : null;
-        $toDo = ('enabled' == $requestData['new_status']) ? __('paydunya-core::messages.country.activated') : __('paydunya-core::messages.country.deactivated');
+        $toDo = ('enabled' == $requestData['new_status']) ? __('speca-core::messages.country.activated') : __('speca-core::messages.country.deactivated');
 
         if ($requestData['new_status'] !== $oldStatus) {
             $country->update(['activated_at' => $activatedAt]);
@@ -192,7 +192,7 @@ class CountryController extends Controller
             model: Country::getModel(),
             event: 'country-' . ($activatedAt ? 'activated' : 'deactivated'),
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.country.' . ($activatedAt ? 'activated' : 'deactivated'))
+            logDescription: __('speca-core::activity-log.country.' . ($activatedAt ? 'activated' : 'deactivated'))
         );
 
         return new SendApiResponse(
@@ -229,12 +229,12 @@ class CountryController extends Controller
             model: Country::getModel(),
             event: 'country-archived',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.country.archived')
+            logDescription: __('speca-core::activity-log.country.archived')
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.country.archived'),
+            message: __('speca-core::messages.country.archived'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -264,12 +264,12 @@ class CountryController extends Controller
             model: Country::getModel(),
             event: 'country-restore',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.country.restore')
+            logDescription: __('speca-core::activity-log.country.restore')
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.country.restore'),
+            message: __('speca-core::messages.country.restore'),
             input: $requestData,
             data: $output,
             statusCode: 200,
@@ -301,12 +301,12 @@ class CountryController extends Controller
             model: Country::getModel(),
             event: 'country-delete',
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('paydunya-core::activity-log.country.delete')
+            logDescription: __('speca-core::activity-log.country.delete')
         );
 
         return new SendApiResponse(
             success: true,
-            message: __('paydunya-core::messages.country.delete'),
+            message: __('speca-core::messages.country.delete'),
             input: $requestData,
             data: $output,
             statusCode: 200,
