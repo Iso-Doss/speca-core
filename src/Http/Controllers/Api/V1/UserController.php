@@ -120,8 +120,8 @@ class UserController extends Controller
 
         $output = getOutput($user);
 
-        $frontendUrl = config('paydunya.front_end_url') ;
-        $mailData = array_merge($user->toArray(), ['link' => $frontendUrl . '/user/' . $user->id,]);
+        $frontendUrl = config('paydunya.front_end_url');
+        $mailData = array_merge($user->toArray(), ['link' => $frontendUrl.'/user/'.$user->id]);
         UserConfirmationMail::dispatch($user->email, __('Confirmation d\'inscription'), 'speca-core::email.user-confirmation', $mailData);
 
         addActivityLog(
@@ -168,8 +168,8 @@ class UserController extends Controller
             );
         }
 
-        $frontendUrl = config('paydunya.front_end_url') ;
-        $mailData = array_merge($user->toArray(), ['link' => $frontendUrl . '/user/' . $user->id,]);
+        $frontendUrl = config('paydunya.front_end_url');
+        $mailData = array_merge($user->toArray(), ['link' => $frontendUrl.'/user/'.$user->id]);
         UserConfirmationMail::dispatch($user->email, __('speca-core::messages.user.send-confirmation-email'), 'speca-core::email.user-confirmation', $mailData);
 
         $output = getOutput($user);
@@ -247,8 +247,8 @@ class UserController extends Controller
         }
 
         $oldStatus = (is_null($user->activated_at)) ? 'disabled' : 'enabled';
-        $activatedAt = ('enabled' == $requestData['new_status']) ? now() : null;
-        $toDo = ('enabled' == $requestData['new_status']) ? __('speca-core::messages.user.activated') : __('speca-core::messages.user.deactivated');
+        $activatedAt = ($requestData['new_status'] == 'enabled') ? now() : null;
+        $toDo = ($requestData['new_status'] == 'enabled') ? __('speca-core::messages.user.activated') : __('speca-core::messages.user.deactivated');
 
         if ($requestData['new_status'] !== $oldStatus) {
             $user->update(['activated_at' => $activatedAt]);
@@ -260,7 +260,7 @@ class UserController extends Controller
             model: User::getModel(),
             event: 'user-'.($activatedAt ? 'activated' : 'deactivated'),
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('speca-core::activity-log.user.' . ($activatedAt ? 'activated' : 'deactivated'), ['email' => $user->email, 'role' => $user->roles->first()?->label])
+            logDescription: __('speca-core::activity-log.user.'.($activatedAt ? 'activated' : 'deactivated'), ['email' => $user->email, 'role' => $user->roles->first()?->label])
         );
 
         return new SendApiResponse(

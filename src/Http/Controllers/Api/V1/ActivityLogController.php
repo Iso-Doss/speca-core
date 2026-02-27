@@ -115,8 +115,8 @@ class ActivityLogController extends Controller
                         });
                 });
             })
-            ->when($requestData['check'] ?? '', fn($q) => $q->whereIn('id', $requestData['check']))
-            ->when($requestData['uncheck'] ?? '', fn($q) => $q->whereNotIn('id', $requestData['uncheck']))
+            ->when($requestData['check'] ?? '', fn ($q) => $q->whereIn('id', $requestData['check']))
+            ->when($requestData['uncheck'] ?? '', fn ($q) => $q->whereNotIn('id', $requestData['uncheck']))
             ->where('log_name', '=', 'speca-core')
             ->latest();
     }

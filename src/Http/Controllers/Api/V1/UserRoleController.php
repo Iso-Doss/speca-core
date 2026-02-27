@@ -192,8 +192,8 @@ class UserRoleController extends Controller
         }
 
         $oldStatus = (is_null($userRole->activated_at)) ? 'disabled' : 'enabled';
-        $activatedAt = ('enabled' == $requestData['new_status']) ? now() : null;
-        $toDo = ('enabled' == $requestData['new_status']) ? __('speca-core::messages.user-role.activated') : __('speca-core::messages.user-role.deactivated');
+        $activatedAt = ($requestData['new_status'] == 'enabled') ? now() : null;
+        $toDo = ($requestData['new_status'] == 'enabled') ? __('speca-core::messages.user-role.activated') : __('speca-core::messages.user-role.deactivated');
 
         if ($requestData['new_status'] !== $oldStatus) {
             $userRole->update(['activated_at' => $activatedAt]);
@@ -205,7 +205,7 @@ class UserRoleController extends Controller
             model: UserRole::getModel(),
             event: 'user-role-'.($activatedAt ? 'activated' : 'deactivated'),
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('speca-core::activity-log.user-role.' . ($activatedAt ? 'activated' : 'deactivated'), ['user_role' => $userRole->label])
+            logDescription: __('speca-core::activity-log.user-role.'.($activatedAt ? 'activated' : 'deactivated'), ['user_role' => $userRole->label])
         );
 
         return new SendApiResponse(

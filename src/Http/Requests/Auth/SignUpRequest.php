@@ -18,14 +18,12 @@ class SignUpRequest extends BaseRequest
         return array_merge(parent::rules(), [
             'name' => ['nullable', 'string', 'max:255'],
             'email' => ['required', 'string', 'max:255', 'email:strict', 'unique:users,email'],
-            'password' => ['required', 'string', 'max:255', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()]
+            'password' => ['required', 'string', 'max:255', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
         ]);
     }
 
     /**
      * Prepare the data for validation.
-     *
-     * @return void
      */
     protected function prepareForValidation(): void
     {

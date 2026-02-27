@@ -15,7 +15,7 @@ if (! function_exists('whoCanAccessDeveloperTools')) {
      */
     function whoCanAccessDeveloperTools(User $user): bool
     {
-        return !is_null($user->email) && in_array($user->email, explode(',', config('speca-core.who-can-access-developers-tools', '')));
+        return ! is_null($user->email) && in_array($user->email, explode(',', config('speca-core.who-can-access-developers-tools', '')));
     }
 }
 
@@ -91,12 +91,12 @@ if (! function_exists('modelExist')) {
                 model: $model,
                 event: $modelSlug.'-'.$eventType.'-attempt',
                 properties: ['input' => $requestData, 'output' => []],
-                logDescription: __('speca-core::activity-log.' . $modelSlug . '.' . $eventType . '-attempt')
+                logDescription: __('speca-core::activity-log.'.$modelSlug.'.'.$eventType.'-attempt')
             );
 
             return new SendApiResponse(
                 success: false,
-                message: __('speca-core::messages.' . $modelSlug . '.not-found'),
+                message: __('speca-core::messages.'.$modelSlug.'.not-found'),
                 input: $requestData,
                 statusCode: 404,
             );

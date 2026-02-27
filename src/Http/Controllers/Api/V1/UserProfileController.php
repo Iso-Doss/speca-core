@@ -184,8 +184,8 @@ class UserProfileController extends Controller
         }
 
         $oldStatus = (is_null($userProfile->activated_at)) ? 'disabled' : 'enabled';
-        $activatedAt = ('enabled' == $requestData['new_status']) ? now() : null;
-        $toDo = ('enabled' == $requestData['new_status']) ? __('speca-core::messages.user-profile.activated') : __('speca-core::messages.user-profile.deactivated');
+        $activatedAt = ($requestData['new_status'] == 'enabled') ? now() : null;
+        $toDo = ($requestData['new_status'] == 'enabled') ? __('speca-core::messages.user-profile.activated') : __('speca-core::messages.user-profile.deactivated');
 
         if ($requestData['new_status'] !== $oldStatus) {
             $userProfile->update(['activated_at' => $activatedAt]);
@@ -197,7 +197,7 @@ class UserProfileController extends Controller
             model: UserProfile::getModel(),
             event: 'user-'.($activatedAt ? 'activated' : 'deactivated'),
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('speca-core::activity-log.user-profile.' . ($activatedAt ? 'activated' : 'deactivated'), ['name' => $userProfile->name])
+            logDescription: __('speca-core::activity-log.user-profile.'.($activatedAt ? 'activated' : 'deactivated'), ['name' => $userProfile->name])
         );
 
         return new SendApiResponse(

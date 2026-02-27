@@ -192,8 +192,8 @@ class UserPermissionCategoryController extends Controller
         }
 
         $oldStatus = (is_null($userPermissionCategory->activated_at)) ? 'disabled' : 'enabled';
-        $activatedAt = ('enabled' == $requestData['new_status']) ? now() : null;
-        $toDo = ('enabled' == $requestData['new_status']) ? __('speca-core::messages.user-permission-category.activated') : __('speca-core::messages.user-permission-category.deactivated');
+        $activatedAt = ($requestData['new_status'] == 'enabled') ? now() : null;
+        $toDo = ($requestData['new_status'] == 'enabled') ? __('speca-core::messages.user-permission-category.activated') : __('speca-core::messages.user-permission-category.deactivated');
 
         if ($requestData['new_status'] !== $oldStatus) {
             $userPermissionCategory->update(['activated_at' => $activatedAt]);
@@ -205,7 +205,7 @@ class UserPermissionCategoryController extends Controller
             model: UserPermissionCategory::getModel(),
             event: 'user-permission-category-'.($activatedAt ? 'activated' : 'deactivated'),
             properties: ['input' => $requestData, 'output' => $output],
-            logDescription: __('speca-core::activity-log.user-permission-category.' . ($activatedAt ? 'activated' : 'deactivated'), ['user_permission_category' => $userPermissionCategory->label])
+            logDescription: __('speca-core::activity-log.user-permission-category.'.($activatedAt ? 'activated' : 'deactivated'), ['user_permission_category' => $userPermissionCategory->label])
         );
 
         return new SendApiResponse(
